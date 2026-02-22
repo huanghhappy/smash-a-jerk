@@ -6,7 +6,7 @@
     <title>小人退散：今天不忍了！</title>
     
     <link href="https://cdn.jsdelivr.net/npm/jf-openhuninn@1.1.1/jf-openhuninn-1.1.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;900&family=Noto+Sans+TC:wght@700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <meta name="description" content="超舒壓互動神器！自訂你的出氣包，把平時受的氣全部發洩出來！">
@@ -30,8 +30,8 @@
         
         body {
             margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-light);
-            /* 首選粉圓體，確保所有中文字完美圓潤 */
-            font-family: 'jf-openhuninn', 'M PLUS Rounded 1c', 'Nunito', sans-serif;
+            /* 修正粉圓體的正確名稱 jf-openhuninn-1.1，並加入強力後備字型 */
+            font-family: 'jf-openhuninn-1.1', 'M PLUS Rounded 1c', 'Noto Sans TC', 'Nunito', sans-serif;
             overflow: hidden; display: flex; flex-direction: column;
             align-items: center; justify-content: flex-start; height: 100vh;
             touch-action: manipulation;
@@ -104,20 +104,23 @@
             align-items: center; justify-content: center; position: relative; cursor: crosshair; 
             min-height: 220px; border-radius: 15px; overflow: hidden; margin-bottom: 10px;
         }
+        
+        /* --- 圖層排序核心 (Z-index設定) --- */
+        /* 第1層：背景圖 */
         .scene-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover; background-position: center; opacity: 0.35; z-index: 1;
         }
-        .avatar-display {
-            display: flex; flex-direction: column; align-items: center;
-            font-size: 6.5rem; line-height: 1; user-select: none; transition: transform 0.1s;
-            filter: drop-shadow(0 0 10px rgba(0,0,0,0.8)); z-index: 2;
-        }
-        /* 新增：永久戰損塗鴉層 */
+        /* 第2層：戰損塗鴉層 (在人物後方，並帶有透明度) */
         .damage-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 3; /* 在人物與背景之上 */
-            overflow: hidden;
+            pointer-events: none; z-index: 2; opacity: 0.65; overflow: hidden;
+        }
+        /* 第3層：人物替身主體 */
+        .avatar-display, .censored-face {
+            position: relative; display: flex; flex-direction: column; align-items: center;
+            font-size: 6.5rem; line-height: 1; user-select: none; transition: transform 0.1s;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.8)); z-index: 3;
         }
 
         .weapon-rack { width: 100%; max-width: 320px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding-bottom: 10px; }
@@ -138,6 +141,7 @@
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
+        /* 第4層：動態傷害飄字 (最頂層) */
         .damage-text {
             position: absolute; color: white; font-weight: 900; font-size: 2rem;
             text-shadow: 2px 2px 0 #000; pointer-events: none; z-index: 10;
@@ -145,20 +149,17 @@
         }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-50px) scale(1.5); } }
 
-        /* --- 結算畫面與浮水印 --- */
+        /* --- 結算畫面設計 --- */
         #result-card {
             background: #fff; color: #000; padding: 25px 25px 15px 25px; border-radius: 20px; margin: 10px 0 20px 0;
             border: 6px solid var(--danger); position: relative; width: 100%; max-width: 320px;
             box-sizing: border-box; overflow: hidden;
         }
         
-        /* 移除打碼層與模糊，直接秀出替身 */
-        .censored-face { position: relative; display: inline-block; z-index: 2; }
-        .mosaic-avatar { font-size: 7rem; line-height: 1; display: flex; flex-direction: column; }
-        
-        .result-title { font-size: 2.2rem; font-weight: 900; color: var(--danger); margin: 0; z-index: 2; position: relative;}
-        #result-timer { color: #555; font-weight: 700; margin-bottom: 10px; position: relative; z-index: 2; }
-        .result-text { font-size: 1.3rem; font-weight: 900; line-height: 1.5; margin: 10px 0 0 0; z-index: 2; position: relative;}
+        /* 確保字體在第4層 (最上方) */
+        .result-title { font-size: 2.2rem; font-weight: 900; color: var(--danger); margin: 0; z-index: 4; position: relative;}
+        #result-timer { color: #555; font-weight: 700; margin-bottom: 10px; position: relative; z-index: 4; }
+        .result-text { font-size: 1.3rem; font-weight: 900; line-height: 1.5; margin: 10px 0 0 0; z-index: 4; position: relative;}
         
         .watermark-footer {
             margin-top: 15px; position: relative; z-index: 4; text-align: center;
@@ -281,12 +282,14 @@
             
             <div class="result-title">K.O. 擊倒</div>
             <div id="result-timer">行刑時間 00:00</div>
+            
             <div class="censored-face">
                 <div class="mosaic-avatar">
                     <div id="result-head">👩🏻</div>
                     <div id="result-body">👔</div>
                 </div>
             </div>
+            
             <p class="result-text">今天不忍了！<br>成功擊退 <span id="result-crime" style="color:var(--danger); font-size:1.6rem;">[罪狀]</span><br>爽度 100%！</p>
             
             <div class="watermark-footer">
@@ -322,22 +325,15 @@
             'meeting': 'bg_meeting.png', 'bedroom': 'bg_bedroom.png'
         };
 
-        // 新增：各刑具對應的戰損 emoji
         const weaponEmojis = {
-            'spit': '💦',
-            'egg': '🥚',
-            'slap': '👋🏻',
-            'slipper': '🩴',
-            'needle': '💉',
-            'lightning': '⚡'
+            'spit': '💦', 'egg': '🥚', 'slap': '👋🏻',
+            'slipper': '🩴', 'needle': '💉', 'lightning': '⚡'
         };
 
         let hp = 100, rage = 0;
         let isExploding = false;
         let startTime, timerInterval;
         
-        // 大幅擴充的惡搞頭部與服裝清單
-        const humanHeadsEndIndex = 8; 
         const heads = ["👩🏻", "👨🏻", "🧑🏻", "🧑🏻‍🦲", "👨🏻‍🦳", "🧓🏻", "👱🏻‍♀️", "🧔🏻‍♂️", "👽", "💩", "🤑", "🤮", "🧟", "🐸", "🍔", "🌭", "🥟", "🍘", "🤿", "🗿", "😈", "👹", "🤡", "🤖"];
         const bodies = ["👔", "👗", "🩳", "🥋", "🧥", "🦺", "🥼", "👚", "👕", "👙", "🩱", "🥻", "👘", "🎽", "🧣", "🍯", "🍵", "🥃", "🥡", "🕳️", "🧻", "🚽", "🪣", "🛒"];
         let headIdx = 0, bodyIdx = 0;
@@ -363,9 +359,7 @@
 
             document.getElementById('arena-head').innerText = heads[headIdx];
             document.getElementById('arena-body').innerText = bodies[bodyIdx];
-            document.getElementById('result-head').innerText = heads[headIdx];
-            document.getElementById('result-body').innerText = bodies[bodyIdx];
-
+            
             document.getElementById('arena-bg').style.backgroundImage = bgUrl;
             document.getElementById('result-bg').style.backgroundImage = bgUrl;
 
@@ -406,23 +400,20 @@
             hp -= dmg; rage += rg;
             if (hp < 0) hp = 0; if (rage > 100) rage = 100;
             
-            leaveDamageMark(type); // 呼叫戰損函數留下記號
+            leaveDamageMark(type); 
             updateUI(); 
             triggerVisualEffects(dmg, txt);
         }
 
-        // 新增：在畫面上永久留下戰損 emoji 的函數
         function leaveDamageMark(type) {
             const dmgLayer = document.getElementById('damage-layer');
             const mark = document.createElement('div');
             mark.innerText = weaponEmojis[type];
             mark.style.position = 'absolute';
-            // 隨機分佈在中心偏外的區域，避免全部擋住人臉
-            mark.style.left = `${15 + Math.random() * 70}%`; 
+            mark.style.left = `${10 + Math.random() * 80}%`; 
             mark.style.top = `${10 + Math.random() * 80}%`;
             mark.style.transform = `rotate(${Math.random() * 360}deg) scale(${0.8 + Math.random() * 0.5})`;
             mark.style.fontSize = '2rem';
-            mark.style.opacity = '0.9'; // 微透明融合背景
             dmgLayer.appendChild(mark);
         }
 
@@ -453,7 +444,11 @@
                 document.body.classList.remove('shake-hard');
                 document.getElementById('arena-screen').style.display = 'none';
                 
-                // 把主圖上的戰損 emoji 原封不動複製到戰績圖的背景層中
+                // 將最新狀態的頭部(骷髏)與身體同步至結算畫面
+                document.getElementById('result-head').innerText = document.getElementById('arena-head').innerText;
+                document.getElementById('result-body').innerText = document.getElementById('arena-body').innerText;
+                
+                // 複製戰損圖層
                 document.getElementById('result-damage-layer').innerHTML = document.getElementById('damage-layer').innerHTML;
                 
                 document.getElementById('result-screen').style.display = 'flex';
@@ -488,12 +483,11 @@
             setTimeout(() => { avatar.style.transform = "scale(1) rotate(0deg)"; }, 100);
 
             const head = document.getElementById('arena-head');
-            if(headIdx < humanHeadsEndIndex) { 
-                if (hp <= 0) {
-                    head.innerText = "💀"; 
-                } else {
-                    head.innerText = heads[headIdx]; 
-                }
+            // 修正：無差別判定，只要血量歸零，不論是哪一種 emoji 都會變成骷髏頭
+            if (hp <= 0) {
+                head.innerText = "💀"; 
+            } else {
+                head.innerText = heads[headIdx]; 
             }
 
             const area = document.getElementById('target-area');
