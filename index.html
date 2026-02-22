@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>小人退散：今天不忍了！</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+    
+    <meta name="description" content="超舒壓互動神器！自訂你的出氣包，把平時受的氣全部發洩出來！">
+    <meta property="og:title" content="小人退散：今天不忍了！">
+    <meta property="og:description" content="我正在教訓小人，點擊連結一起加入洩憤行列！以牙還牙，加倍奉還！">
+    <meta property="og:image" content="social.png">
+    <meta property="og:type" content="website">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="打小人">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <style>
+        /* --- 視覺風格 --- */
+        :root {
+            --bg-color: #121212;
+            --primary: #FFD700; 
+            --danger: #FF2400;  
+            --text-light: #E0E0E0;
+            --panel-bg: #222;
+        }
+        
+        body {
+            margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-light);
+            /* 優先使用圓體與童趣字型 */
+            font-family: 'Nunito', 'Chalkboard SE', 'Comic Sans MS', 'Varela Round', 'Arial Rounded MT Bold', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            overflow: hidden; display: flex; flex-direction: column;
+            align-items: center; justify-content: flex-start; height: 100vh;
+            touch-action: manipulation; transition: background 0.5s;
+        }
+
+        /* 畫面震動特效 */
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-3px, 2px) rotate(-1deg); }
+            40% { transform: translate(3px, -2px) rotate(1deg); }
+            60% { transform: translate(-3px, -2px) rotate(0deg); }
+            80% { transform: translate(3px, 2px) rotate(-1deg); }
+        }
+        .shake-active { animation: shake 0.2s; }
+        .shake-hard { animation: shake 0.5s; }
+
+        /* 容器通用 */
+        .screen-container {
+            width: 100%; max-width: 500px; text-align: center; padding: 20px;
+            box-sizing: border-box; height: 100%; display: flex; flex-direction: column;
+            overflow-y: auto;
+        }
+
+        h1 { color: var(--primary); font-size: 2.2rem; text-shadow: 2px 2px 0px var(--danger); margin-bottom: 0; line-height: 1.2;}
+        h2 { font-size: 1.3rem; margin: 15px 0 10px 0; color: #fff;}
+        .subtitle { color: var(--danger); font-size: 1.5rem; font-weight: 900; margin-top: 5px; }
+        
+        .input-group { margin-bottom: 15px; }
+        input, select {
+            width: 90%; padding: 12px; font-size: 1.1rem; font-family: inherit; font-weight: bold;
+            background: #333; border: 2px solid var(--primary); color: white;
+            border-radius: 15px; /* 增加圓角 */ text-align: center; outline: none;
+        }
+
+        button.btn-primary {
+            background-color: var(--danger); color: white; border: none;
+            padding: 15px 30px; font-size: 1.3rem; font-weight: bold; width: 90%; font-family: inherit;
+            border-radius: 15px; cursor: pointer; margin-top: 10px;
+            box-shadow: 0 4px 0 #8b0000; transition: 0.1s;
+        }
+        button.btn-primary:active { transform: translateY(4px); box-shadow: 0 0 0 #8b0000; }
+
+        /* --- 人物設計器 --- */
+        .avatar-builder {
+            display: flex; justify-content: center; align-items: center; gap: 20px;
+            background: var(--panel-bg); padding: 10px; border-radius: 15px; margin: 0 0 15px 0;
+        }
+        .avatar-preview {
+            display: flex; flex-direction: column; align-items: center;
+            font-size: 4rem; line-height: 1; height: 120px; justify-content: center;
+        }
+        .builder-controls button {
+            background: #444; border: none; color: white; padding: 8px 12px; font-family: inherit;
+            border-radius: 10px; cursor: pointer; margin: 5px; font-size: 1rem; font-weight: bold;
+        }
+
+        /* --- 行刑場介面 --- */
+        .top-info { display: flex; justify-content: space-between; font-size: 1rem; font-weight: bold; color: #aaa; margin-top: 10px; }
+        .bar-container { background: #333; height: 20px; border-radius: 10px; margin-bottom: 10px; overflow: hidden; border: 2px solid #555;}
+        #hp-bar { background: #00FF00; height: 100%; width: 100%; transition: width 0.2s, background 0.5s; border-radius: 8px; }
+        #rage-bar { background: var(--primary); height: 100%; width: 0%; transition: width 0.2s; border-radius: 8px;}
+
+        #target-area {
+            flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: relative; cursor: crosshair; min-height: 250px;
+        }
+        .avatar-display {
+            display: flex; flex-direction: column; align-items: center;
+            font-size: 7rem; line-height: 1; user-select: none; transition: transform 0.1s;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+        }
+
+        /* 武器庫 */
+        .weapon-rack {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-bottom: 20px;
+        }
+        .weapon-btn {
+            background: #2a2a2a; border: 2px solid #555; color: white; padding: 12px 0; font-family: inherit;
+            border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
+        }
+        .weapon-btn:active { background: #444; border-color: var(--primary); }
+        
+        #ultimate-btn {
+            grid-column: span 2; background: #555; border: 2px solid #333; color: #888;
+            padding: 15px; font-size: 1.3rem; font-weight: bold; border-radius: 12px; transition: all 0.3s; font-family: inherit;
+        }
+        #ultimate-btn.ready {
+            background: var(--danger); border-color: var(--primary); color: white;
+            box-shadow: 0 0 15px var(--danger); animation: pulse 1s infinite; cursor: pointer;
+        }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+
+        /* 飄字特效 */
+        .damage-text {
+            position: absolute; color: white; font-weight: 900; font-size: 2.2rem;
+            text-shadow: 2px 2px 0 #000; pointer-events: none;
+            animation: floatUp 0.8s ease-out forwards; z-index: 10;
+        }
+        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-50px) scale(1.5); } }
+
+        /* --- 結算畫面 --- */
+        #result-card {
+            background: #fff; color: #000; padding: 20px; border-radius: 20px; margin: 20px 0;
+            border: 6px solid var(--danger); box-shadow: 0 0 20px rgba(255,0,0,0.5);
+            position: relative;
+        }
+        .censored-face { position: relative; display: inline-block; }
+        .censored-face::after {
+            content: ''; position: absolute; top: 30%; left: 10%; width: 80%; height: 25%;
+            background: black; z-index: 5;
+        }
+        .mosaic-avatar {
+            font-size: 8rem; line-height: 1; display: flex; flex-direction: column; filter: blur(2px) grayscale(50%);
+        }
+        .result-title { font-size: 2.2rem; font-weight: 900; color: var(--danger); text-transform: uppercase; margin: 10px 0;}
+        .result-text { font-size: 1.4rem; font-weight: bold; line-height: 1.5; }
+
+        .disclaimer { font-size: 0.8rem; color: #888; margin-top: auto; padding: 15px 0; text-align: center; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="setup-screen" class="screen-container">
+        <h1>小人退散：今天不忍了！</h1>
+        <div class="subtitle">— 建立祭壇 —</div>
+        
+        <div class="input-group" style="margin-top: 15px;">
+            <input type="text" id="target-name" placeholder="輸入你想教訓的對象 (選填)" maxlength="10">
+        </div>
+        
+        <div class="input-group">
+            <select id="crime-tag">
+                <option value="職場甩鍋王">🎯 職場甩鍋王</option>
+                <option value="感情渣渣">💔 感情渣渣</option>
+                <option value="欠錢不還">💸 欠錢不還</option>
+                <option value="雙面人">🎭 雙面人</option>
+                <option value="奧客/酸民">🤬 奧客/酸民</option>
+            </select>
+        </div>
+
+        <h2>設計人物替身</h2>
+        <div class="avatar-builder">
+            <div class="builder-controls">
+                <button onclick="changeAvatar('head', -1)">◀</button>
+                <div style="font-weight:bold; color:#aaa; font-size:0.9rem;">頭部</div>
+                <button onclick="changeAvatar('head', 1)">▶</button>
+            </div>
+            <div class="avatar-preview">
+                <div id="preview-head">👱‍♂️</div>
+                <div id="preview-body">👔</div>
+            </div>
+            <div class="builder-controls">
+                <button onclick="changeAvatar('body', -1)">◀</button>
+                <div style="font-weight:bold; color:#aaa; font-size:0.9rem;">服裝</div>
+                <button onclick="changeAvatar('body', 1)">▶</button>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <select id="scene-select">
+                <option value="office">☕ 辦公室茶水間</option>
+                <option value="alley">🗑️ 陰暗後巷</option>
+                <option value="hell">🔥 地獄審判台</option>
+            </select>
+        </div>
+
+        <button class="btn-primary" onclick="startExecution()">鎖定目標，進入行刑場</button>
+        <div class="disclaimer">⚠️ 本應用程式純屬娛樂和舒壓用途，請勿在現實生活中模仿任何行為。</div>
+    </div>
+
+    <div id="arena-screen" class="screen-container" style="display: none;">
+        <div class="top-info">
+            <span id="display-name" style="color: var(--primary);">目標：</span>
+            <span id="game-timer">時間：00:00</span>
+        </div>
+        
+        <div style="text-align: left; margin-top: 10px; font-weight:bold;">
+            <div style="font-size: 0.9rem;">小人生命值 (HP)</div>
+            <div class="bar-container"><div id="hp-bar"></div></div>
+            <div style="font-size: 0.9rem;">怒氣值 (Rage)</div>
+            <div class="bar-container"><div id="rage-bar"></div></div>
+        </div>
+
+        <div id="target-area" onclick="attack('slap')">
+            <div class="avatar-display" id="arena-avatar">
+                <div id="arena-head">👱‍♂️</div>
+                <div id="arena-body">👔</div>
+            </div>
+        </div>
+
+        <div class="weapon-rack">
+            <button class="weapon-btn" onclick="attack('slap', event)">👋 連環巴掌</button>
+            <button class="weapon-btn" onclick="attack('spit', event)">💦 吐口水</button>
+            <button class="weapon-btn" onclick="attack('egg', event)">🥚 丟臭雞蛋</button>
+            <button class="weapon-btn" onclick="attack('needle', event)">📌 針扎詛咒</button>
+            <button class="weapon-btn" onclick="attack('slipper', event)">🩴 藍白拖重擊</button>
+            <button class="weapon-btn" onclick="attack('lightning', event)">⚡ 天打雷劈</button>
+            <button id="ultimate-btn" onclick="ultimateAttack()" disabled>🔥 業力引爆 (怒氣沖天) 🔥</button>
+        </div>
+    </div>
+
+    <div id="result-screen" class="screen-container" style="display: none; justify-content: center;">
+        <h1 style="font-size: 2.5rem; color: #fff;">本日戰績</h1>
+        
+        <div id="result-card">
+            <div class="result-title">K.O. 擊倒</div>
+            <div class="censored-face">
+                <div class="mosaic-avatar">
+                    <div id="result-head">👱‍♂️</div>
+                    <div id="result-body">👔</div>
+                </div>
+            </div>
+            <p class="result-text">今天不忍了！<br>成功擊退 <span id="result-crime" style="color:var(--danger); font-size:1.6rem; font-weight:900;">[罪狀]</span><br>爽度 100%！</p>
+        </div>
+
+        <button class="btn-primary" onclick="location.reload()" style="margin-top: 20px;">🔄 再打一個</button>
+        <div class="disclaimer">⚠️ 本應用程式純屬娛樂和舒壓用途，請勿在現實生活中模仿任何行為。</div>
+    </div>
+
+    <script>
+        // --- 預載入音效物件 ---
+        // 使用 preload="auto" 的概念預先準備音效
+        const sounds = {
+            slap: new Audio('slap.mp3'),
+            spit: new Audio('spit.mp3'),
+            egg: new Audio('egg.mp3'),
+            needle: new Audio('needle.mp3'),
+            slipper: new Audio('slipper.mp3'),
+            lightning: new Audio('lightning.mp3'),
+            ultimate: new Audio('ultimate.mp3')
+        };
+        
+        // 嘗試在背景預先加載
+        Object.values(sounds).forEach(audio => { audio.preload = "auto"; });
+
+        let hp = 100;
+        let rage = 0;
+        let isDead = false;
+        let startTime, timerInterval;
+        
+        const heads = ["👱‍♂️", "👩", "👨‍🦲", "🤡", "👹", "👽", "💩"];
+        const bodies = ["👔", "👗", "🩳", "🥋", "🧥", "🦺"];
+        let headIdx = 0; let bodyIdx = 0;
+
+        function changeAvatar(part, dir) {
+            if (part === 'head') {
+                headIdx = (headIdx + dir + heads.length) % heads.length;
+                document.getElementById('preview-head').innerText = heads[headIdx];
+            } else {
+                bodyIdx = (bodyIdx + dir + bodies.length) % bodies.length;
+                document.getElementById('preview-body').innerText = bodies[bodyIdx];
+            }
+        }
+
+        function startExecution() {
+            const name = document.getElementById('target-name').value.trim() || "無名氏";
+            const crime = document.getElementById('crime-tag').options[document.getElementById('crime-tag').selectedIndex].text;
+            const scene = document.getElementById('scene-select').value;
+            
+            document.getElementById('display-name').innerText = `目標：${name} (${crime.split(' ')[1]})`;
+            document.getElementById('result-crime').innerText = crime.split(' ')[1];
+
+            document.getElementById('arena-head').innerText = heads[headIdx];
+            document.getElementById('arena-body').innerText = bodies[bodyIdx];
+            document.getElementById('result-head').innerText = heads[headIdx];
+            document.getElementById('result-body').innerText = bodies[bodyIdx];
+
+            if(scene === 'office') document.body.style.background = "#e0e0e0";
+            else if(scene === 'alley') document.body.style.background = "#0f172a";
+            else if(scene === 'hell') document.body.style.background = "#450a0a";
+
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('arena-screen').style.display = 'flex';
+
+            startTime = Date.now();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            if(isDead) clearInterval(timerInterval);
+            let diff = Math.floor((Date.now() - startTime) / 1000);
+            let m = String(Math.floor(diff / 60)).padStart(2, '0');
+            let s = String(diff % 60).padStart(2, '0');
+            document.getElementById('game-timer').innerText = `時間：${m}:${s}`;
+        }
+
+        function attack(type, event) {
+            if (isDead) return;
+            if (event) event.stopPropagation();
+
+            let dmg = 0, rg = 0, txt = "";
+            
+            switch(type) {
+                case 'spit': dmg = 2; rg = 5; txt = "呸！"; break;
+                case 'slap': dmg = 5; rg = 8; txt = "啪！"; break;
+                case 'egg': dmg = 8; rg = 10; txt = "噗滋！"; break;
+                case 'needle': dmg = 12; rg = 15; txt = "扎！"; break;
+                case 'slipper': dmg = 18; rg = 20; txt = "轟！"; break;
+                case 'lightning': dmg = 25; rg = 25; txt = "⚡雷擊"; break;
+            }
+
+            // 【音效連發引擎】使用 cloneNode 讓音效可以無縫重疊播放，解決空拍與卡頓
+            if(sounds[type]) {
+                let soundClone = sounds[type].cloneNode();
+                soundClone.play().catch(e => console.log("等待使用者互動解鎖音效"));
+            }
+
+            hp -= dmg; rage += rg;
+            if (hp < 0) hp = 0; if (rage > 100) rage = 100;
+
+            updateUI();
+            triggerVisualEffects(dmg, txt, type);
+        }
+
+        function ultimateAttack() {
+            if (rage < 100 || isDead) return;
+            isDead = true; hp = 0; rage = 0; updateUI(); clearInterval(timerInterval);
+            
+            if(sounds.ultimate) { 
+                let ultClone = sounds.ultimate.cloneNode();
+                ultClone.play().catch(()=>{}); 
+            }
+
+            document.body.classList.add('shake-hard');
+            const avatar = document.getElementById('arena-avatar');
+            avatar.style.transform = "scale(2)";
+            document.getElementById('arena-head').innerText = "💥";
+            document.getElementById('arena-body').innerText = "🔥";
+
+            setTimeout(() => {
+                document.body.classList.remove('shake-hard');
+                document.body.style.background = "var(--bg-color)"; 
+                document.getElementById('arena-screen').style.display = 'none';
+                document.getElementById('result-screen').style.display = 'flex';
+            }, 1500);
+        }
+
+        function updateUI() {
+            document.getElementById('hp-bar').style.width = `${hp}%`;
+            document.getElementById('rage-bar').style.width = `${rage}%`;
+            
+            const hpBar = document.getElementById('hp-bar');
+            if (hp > 50) hpBar.style.background = "#00FF00";
+            else if (hp > 20) hpBar.style.background = "#FFA500";
+            else hpBar.style.background = "#FF0000";
+
+            const ultBtn = document.getElementById('ultimate-btn');
+            if (rage >= 100) { ultBtn.disabled = false; ultBtn.classList.add('ready'); } 
+            else { ultBtn.disabled = true; ultBtn.classList.remove('ready'); }
+        }
+
+        function triggerVisualEffects(damage, text, type) {
+            document.body.classList.remove('shake-active');
+            void document.body.offsetWidth; 
+            document.body.classList.add('shake-active');
+
+            const avatar = document.getElementById('arena-avatar');
+            avatar.style.transform = "scale(0.8) rotate(" + (Math.random() * 20 - 10) + "deg)";
+            setTimeout(() => { avatar.style.transform = "scale(1) rotate(0deg)"; }, 100);
+
+            const head = document.getElementById('arena-head');
+            if(headIdx < 2) { 
+                if (hp <= 0) head.innerText = "💀";
+                else if (hp < 30) head.innerText = "🥵";
+                else if (hp < 60) head.innerText = "🤕";
+                else head.innerText = "😧";
+            }
+
+            const area = document.getElementById('target-area');
+            const el = document.createElement('div');
+            el.classList.add('damage-text');
+            el.innerText = `${text} -${damage}`;
+            el.style.left = `calc(50% + ${(Math.random() - 0.5) * 80}px)`;
+            el.style.top = `calc(50% + ${(Math.random() - 0.5) * 80}px)`;
+            el.style.color = damage > 15 ? "var(--primary)" : "var(--danger)";
+            area.appendChild(el);
+            setTimeout(() => { area.removeChild(el); }, 800);
+            
+            if (hp <= 0 && !isDead) {
+                isDead = true; clearInterval(timerInterval);
+                setTimeout(() => { ultimateAttack(); }, 1000); 
+            }
+        }
+    </script>
+</body>
+</html>
