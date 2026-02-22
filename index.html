@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>小人退散：今天不忍了！</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800;900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <meta name="description" content="超舒壓互動神器！自訂你的出氣包，把平時受的氣全部發洩出來！">
@@ -30,8 +29,8 @@
         
         body {
             margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-light);
-            /* 強制全面套用圓體 */
-            font-family: 'M PLUS Rounded 1c', 'Varela Round', 'Arial Rounded MT Bold', 'PingFang TC', sans-serif;
+            /* 統一字體，確保跨平台顯示圓潤感 */
+            font-family: 'M PLUS Rounded 1c', 'Nunito', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
             overflow: hidden; display: flex; flex-direction: column;
             align-items: center; justify-content: flex-start; height: 100vh;
             touch-action: manipulation;
@@ -53,30 +52,24 @@
             overflow-y: auto; align-items: center;
         }
 
-        /* 標題與排版優化：防止跳行 */
         .title-group { margin-bottom: 15px; width: 100%; }
         h1 { 
             color: var(--primary); 
-            font-size: clamp(1.5rem, 6.5vw, 2.2rem); /* 動態縮放防止跳行 */
+            font-size: clamp(1.5rem, 6.5vw, 2.2rem); 
             white-space: nowrap; text-shadow: 2px 2px 0px var(--danger); 
-            margin: 0; line-height: 1.2; font-weight: 900;
+            margin: 0; line-height: 1.2; font-weight: 700; /* 統一粗細 */
         }
-        .subtitle { color: var(--danger); font-size: 1.3rem; font-weight: 900; margin-top: 5px; }
-        h2 { font-size: 1.2rem; margin: 10px 0; color: #fff;}
+        .subtitle { color: var(--danger); font-size: 1.3rem; font-weight: 700; margin-top: 5px; }
+        h2 { font-size: 1.2rem; margin: 10px 0; color: #fff; font-weight: 700;}
         
-        /* 表單元件齊頭尾置中設計 */
-        .input-wrapper {
-            width: 100%; display: flex; justify-content: center; margin-bottom: 15px;
-        }
+        .input-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 15px; }
         .ui-element {
             width: 100%; max-width: 320px; box-sizing: border-box;
-            padding: 12px; font-size: 1.1rem; font-family: inherit; font-weight: 800;
+            padding: 12px; font-size: 1.1rem; font-family: inherit; font-weight: 700;
             border-radius: 12px; text-align: center; outline: none;
         }
-        input, select {
-            background: #333; border: 2px solid var(--primary); color: white;
-            appearance: none; /* 移除系統預設下拉箭頭以求美觀 */
-        }
+        input, select { background: #333; border: 2px solid var(--primary); color: white; appearance: none; }
+        
         button.btn-primary {
             background-color: var(--danger); color: white; border: none;
             padding: 15px 0; font-size: 1.3rem; margin-top: 5px; cursor: pointer;
@@ -84,32 +77,27 @@
         }
         button.btn-primary:active { transform: translateY(4px); box-shadow: 0 0 0 #8b0000; }
 
-        /* --- 虛擬替身設計器 (直覺化左右排列) --- */
         .avatar-builder {
             width: 100%; max-width: 320px; background: var(--panel-bg); 
             padding: 15px; border-radius: 15px; margin-bottom: 15px; box-sizing: border-box;
             display: flex; flex-direction: column; gap: 10px;
         }
-        .avatar-row {
-            display: flex; justify-content: space-between; align-items: center;
-        }
+        .avatar-row { display: flex; justify-content: space-between; align-items: center; }
         .builder-controls button {
             background: #444; border: none; color: white; width: 45px; height: 45px;
             border-radius: 10px; cursor: pointer; font-size: 1.2rem; display: flex;
             align-items: center; justify-content: center;
         }
         .preview-emoji { font-size: 3.5rem; line-height: 1; width: 80px; text-align: center;}
-        .part-label { font-size: 0.8rem; color: #aaa; font-weight: bold; width: 40px;}
+        .part-label { font-size: 0.9rem; color: #aaa; font-weight: 700; width: 40px;}
 
-        /* --- 行刑場介面 --- */
-        .top-info { width: 100%; display: flex; justify-content: space-between; font-size: 1rem; font-weight: 800; color: #aaa; margin-top: 5px; }
+        .top-info { width: 100%; display: flex; justify-content: space-between; font-size: 1rem; font-weight: 700; color: #aaa; margin-top: 5px; }
         
-        .status-area { width: 100%; max-width: 320px; text-align: left; margin-top: 10px; font-weight:800; }
+        .status-area { width: 100%; max-width: 320px; text-align: left; margin-top: 10px; font-weight: 700; }
         .bar-container { background: #333; height: 18px; border-radius: 10px; margin-bottom: 8px; overflow: hidden; border: 2px solid #555;}
         #hp-bar { background: #00FF00; height: 100%; width: 100%; transition: width 0.2s, background 0.5s; }
         #rage-bar { background: var(--primary); height: 100%; width: 0%; transition: width 0.2s;}
 
-        /* 場景背景與目標區域 */
         #target-area {
             flex-grow: 1; width: 100%; max-width: 320px; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; position: relative; cursor: crosshair; 
@@ -125,19 +113,16 @@
             filter: drop-shadow(0 0 10px rgba(0,0,0,0.8)); z-index: 2;
         }
 
-        /* 武器庫 */
-        .weapon-rack {
-            width: 100%; max-width: 320px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding-bottom: 10px;
-        }
+        .weapon-rack { width: 100%; max-width: 320px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding-bottom: 10px; }
         .weapon-btn {
             background: #2a2a2a; border: 2px solid #555; color: white; padding: 10px 0; font-family: inherit;
-            border-radius: 12px; font-size: 1.1rem; font-weight: 800; cursor: pointer;
+            border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer;
         }
         .weapon-btn:active { background: #444; border-color: var(--primary); }
         
         #ultimate-btn {
             grid-column: span 2; background: #555; border: 2px solid #333; color: #888;
-            padding: 12px; font-size: 1.2rem; font-weight: 900; border-radius: 12px; transition: all 0.3s;
+            padding: 12px; font-size: 1.2rem; font-weight: 700; border-radius: 12px; transition: all 0.3s;
         }
         #ultimate-btn.ready {
             background: var(--danger); border-color: var(--primary); color: white;
@@ -147,15 +132,15 @@
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
         .damage-text {
-            position: absolute; color: white; font-weight: 900; font-size: 2rem;
+            position: absolute; color: white; font-weight: 700; font-size: 2rem;
             text-shadow: 2px 2px 0 #000; pointer-events: none; z-index: 10;
             animation: floatUp 0.8s ease-out forwards;
         }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-50px) scale(1.5); } }
 
-        /* --- 結算畫面 (截圖用) --- */
+        /* --- 結算畫面與浮水印 --- */
         #result-card {
-            background: #fff; color: #000; padding: 25px; border-radius: 20px; margin: 10px 0 20px 0;
+            background: #fff; color: #000; padding: 25px 25px 15px 25px; border-radius: 20px; margin: 10px 0 20px 0;
             border: 6px solid var(--danger); position: relative; width: 100%; max-width: 320px;
             box-sizing: border-box; overflow: hidden;
         }
@@ -164,23 +149,25 @@
             content: ''; position: absolute; top: 32%; left: 10%; width: 80%; height: 22%;
             background: black; z-index: 5;
         }
-        .mosaic-avatar {
-            font-size: 7rem; line-height: 1; display: flex; flex-direction: column; filter: blur(1px) grayscale(30%);
-        }
-        .result-title { font-size: 2.2rem; font-weight: 900; color: var(--danger); margin: 0 0 10px 0; z-index: 2; position: relative;}
-        .result-text { font-size: 1.3rem; font-weight: 900; line-height: 1.5; margin: 10px 0 0 0; z-index: 2; position: relative;}
+        .mosaic-avatar { font-size: 7rem; line-height: 1; display: flex; flex-direction: column; filter: blur(1px) grayscale(30%); }
+        .result-title { font-size: 2.2rem; font-weight: 700; color: var(--danger); margin: 0 0 10px 0; z-index: 2; position: relative;}
+        .result-text { font-size: 1.3rem; font-weight: 700; line-height: 1.5; margin: 10px 0 0 0; z-index: 2; position: relative;}
         
-        /* 圖片生成後的展示區 */
+        /* 戰績圖浮水印樣式 */
+        .watermark-footer {
+            margin-top: 15px; position: relative; z-index: 2; text-align: center;
+            color: rgba(0, 0, 0, 0.4); font-weight: 700; line-height: 1.2;
+        }
+
         #final-image-container { width: 100%; max-width: 320px; display: none; margin-bottom: 15px; }
         #final-image-container img { width: 100%; border-radius: 20px; box-shadow: 0 0 20px rgba(255,0,0,0.5); }
 
-        /* --- 底部資訊 (單行不跑版) --- */
         .footer-info {
             margin-top: auto; padding: 10px 0; text-align: center; width: 100%;
             display: flex; flex-direction: column; gap: 4px;
         }
         .footer-info div {
-            font-size: clamp(0.6rem, 3vw, 0.8rem); color: #888; font-weight: 800;
+            font-size: clamp(0.6rem, 3vw, 0.8rem); color: #888; font-weight: 700;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
     </style>
@@ -248,7 +235,7 @@
     <div id="arena-screen" class="screen-container" style="display: none;">
         <div class="top-info">
             <span id="display-name" style="color: var(--primary);">目標：</span>
-            <span id="game-timer">時間：00:00</span>
+            <span id="game-timer">行刑時間：00:00</span>
         </div>
         
         <div class="status-area">
@@ -259,7 +246,8 @@
         </div>
 
         <div id="target-area" onclick="attack('slap')">
-            <div id="arena-bg" class="scene-bg"></div> <div class="avatar-display" id="arena-avatar">
+            <div id="arena-bg" class="scene-bg"></div>
+            <div class="avatar-display" id="arena-avatar">
                 <div id="arena-head">👩🏻</div>
                 <div id="arena-body">👔</div>
             </div>
@@ -278,10 +266,11 @@
 
     <div id="result-screen" class="screen-container" style="display: none; justify-content: center;">
         <h1 style="color: #fff; margin-bottom: 10px; font-size: 2rem;">本日戰績</h1>
-        <p style="color:#aaa; font-size:0.9rem; margin-top:0;">長按下方圖片即可儲存分享</p>
+        <p style="color:#aaa; font-size:0.9rem; margin-top:0; font-weight:700;">長按下方圖片即可儲存分享</p>
         
         <div id="result-card" style="display: block;">
-            <div id="result-bg" class="scene-bg"></div> <div class="result-title">K.O. 擊倒</div>
+            <div id="result-bg" class="scene-bg"></div>
+            <div class="result-title">K.O. 擊倒</div>
             <div class="censored-face">
                 <div class="mosaic-avatar">
                     <div id="result-head">👩🏻</div>
@@ -289,6 +278,11 @@
                 </div>
             </div>
             <p class="result-text">今天不忍了！<br>成功擊退 <span id="result-crime" style="color:var(--danger); font-size:1.6rem;">[罪狀]</span><br>爽度 100%！</p>
+            
+            <div class="watermark-footer">
+                <div style="font-size: 0.75rem;">© 2026 an App a Day Project.</div>
+                <div style="font-size: 0.6rem; transform: scale(0.95); margin-top: 2px;">⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。</div>
+            </div>
         </div>
 
         <div id="final-image-container"></div>
@@ -312,17 +306,16 @@
         };
         Object.values(sounds).forEach(audio => { audio.preload = "auto"; });
 
-        // 背景圖對應表
         const bgMap = {
             'office': 'bg_office.png', 'alley': 'bg_alley.png',
             'hell': 'bg_hell.png', 'toilet': 'bg_toilet.png',
             'meeting': 'bg_meeting.png', 'bedroom': 'bg_bedroom.png'
         };
 
-        let hp = 100, rage = 0, isDead = false;
+        let hp = 100, rage = 0;
+        let isExploding = false; // 取代原本有衝突的 isDead 狀態
         let startTime, timerInterval;
         
-        // 擴充台灣常見膚色與造型
         const heads = ["👩🏻", "👨🏻", "🧑🏻", "🧑🏻‍🦲", "👨🏻‍🦳", "🧓🏻", "👱🏻‍♀️", "🧔🏻‍♂️", "👽", "💩"];
         const bodies = ["👔", "👗", "🩳", "🥋", "🧥", "🦺", "🥼", "👚", "👕"];
         let headIdx = 0, bodyIdx = 0;
@@ -351,7 +344,6 @@
             document.getElementById('result-head').innerText = heads[headIdx];
             document.getElementById('result-body').innerText = bodies[bodyIdx];
 
-            // 設定場景與結算卡片的背景圖
             document.getElementById('arena-bg').style.backgroundImage = bgUrl;
             document.getElementById('result-bg').style.backgroundImage = bgUrl;
 
@@ -363,15 +355,15 @@
         }
 
         function updateTimer() {
-            if(isDead) clearInterval(timerInterval);
+            if(isExploding) clearInterval(timerInterval);
             let diff = Math.floor((Date.now() - startTime) / 1000);
             let m = String(Math.floor(diff / 60)).padStart(2, '0');
             let s = String(diff % 60).padStart(2, '0');
-            document.getElementById('game-timer').innerText = `時間：${m}:${s}`;
+            document.getElementById('game-timer').innerText = `行刑時間：${m}:${s}`;
         }
 
         function attack(type, event) {
-            if (isDead) return;
+            if (isExploding) return;
             if (event) event.stopPropagation();
 
             let dmg = 0, rg = 0, txt = "";
@@ -394,9 +386,16 @@
             updateUI(); triggerVisualEffects(dmg, txt);
         }
 
+        // 獨立的大招觸發與動畫邏輯
         function ultimateAttack() {
-            if (rage < 100 || isDead) return;
-            isDead = true; hp = 0; rage = 0; updateUI(); clearInterval(timerInterval);
+            if (isExploding) return; // 避免重複觸發
+            if (rage < 100 && hp > 0) return; // 保護機制：未滿怒氣且未死則無法按
+
+            isExploding = true;
+            hp = 0;
+            rage = 100; // 強制滿怒氣畫面
+            updateUI();
+            clearInterval(timerInterval);
             
             if(sounds.ultimate) { 
                 let ultClone = sounds.ultimate.cloneNode();
@@ -405,15 +404,19 @@
 
             document.body.classList.add('shake-hard');
             const avatar = document.getElementById('arena-avatar');
-            avatar.style.transform = "scale(2)";
+            avatar.style.transform = "scale(2.5)";
+            
+            // 替換為單一顆爆炸符號並置中
             document.getElementById('arena-head').innerText = "💥";
-            document.getElementById('arena-body').innerText = "🔥";
+            document.getElementById('arena-body').style.display = "none";
+            document.getElementById('arena-head').style.transform = "translateY(25px)";
 
+            // 動畫結束後切換結算畫面
             setTimeout(() => {
                 document.body.classList.remove('shake-hard');
                 document.getElementById('arena-screen').style.display = 'none';
                 document.getElementById('result-screen').style.display = 'flex';
-                generateFinalImage(); // 觸發截圖生成
+                generateFinalImage(); 
             }, 1500);
         }
 
@@ -427,8 +430,11 @@
             else hpBar.style.background = "#FF0000";
 
             const ultBtn = document.getElementById('ultimate-btn');
-            if (rage >= 100) { ultBtn.disabled = false; ultBtn.classList.add('ready'); } 
-            else { ultBtn.disabled = true; ultBtn.classList.remove('ready'); }
+            if (rage >= 100 || hp <= 0) { 
+                ultBtn.disabled = false; ultBtn.classList.add('ready'); 
+            } else { 
+                ultBtn.disabled = true; ultBtn.classList.remove('ready'); 
+            }
         }
 
         function triggerVisualEffects(damage, text) {
@@ -458,29 +464,25 @@
             area.appendChild(el);
             setTimeout(() => { area.removeChild(el); }, 800);
             
-            if (hp <= 0 && !isDead) {
-                isDead = true; clearInterval(timerInterval);
-                setTimeout(() => { ultimateAttack(); }, 1000); 
+            // HP 歸零自動觸發大招 (延遲0.8秒讓使用者看到 💀 表情)
+            if (hp <= 0 && !isExploding) {
+                clearInterval(timerInterval);
+                setTimeout(() => { ultimateAttack(); }, 800); 
             }
         }
 
-        // 使用 html2canvas 將結算卡片轉換為真實圖片
         function generateFinalImage() {
             const targetCard = document.getElementById('result-card');
             
             html2canvas(targetCard, {
                 backgroundColor: null,
-                scale: 2 // 提高截圖畫質
+                scale: 2 
             }).then(canvas => {
-                // 將畫布轉為圖片 URL
                 const imgData = canvas.toDataURL('image/png');
-                
-                // 建立圖片標籤
                 const imgElement = document.createElement('img');
                 imgElement.src = imgData;
                 imgElement.alt = "我的打小人戰績";
 
-                // 隱藏原始 HTML 卡片，顯示生成的圖片
                 targetCard.style.display = 'none';
                 const container = document.getElementById('final-image-container');
                 container.appendChild(imgElement);
