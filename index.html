@@ -30,7 +30,6 @@
         
         body {
             margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-light);
-            /* 修正粉圓體的正確名稱 jf-openhuninn-1.1，並加入強力後備字型 */
             font-family: 'jf-openhuninn-1.1', 'M PLUS Rounded 1c', 'Noto Sans TC', 'Nunito', sans-serif;
             overflow: hidden; display: flex; flex-direction: column;
             align-items: center; justify-content: flex-start; height: 100vh;
@@ -105,19 +104,16 @@
             min-height: 220px; border-radius: 15px; overflow: hidden; margin-bottom: 10px;
         }
         
-        /* --- 圖層排序核心 (Z-index設定) --- */
-        /* 第1層：背景圖 */
+        /* 基礎圖層設定 */
         .scene-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover; background-position: center; opacity: 0.35; z-index: 1;
         }
-        /* 第2層：戰損塗鴉層 (在人物後方，並帶有透明度) */
         .damage-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 2; opacity: 0.65; overflow: hidden;
         }
-        /* 第3層：人物替身主體 */
-        .avatar-display, .censored-face {
+        .avatar-display {
             position: relative; display: flex; flex-direction: column; align-items: center;
             font-size: 6.5rem; line-height: 1; user-select: none; transition: transform 0.1s;
             filter: drop-shadow(0 0 10px rgba(0,0,0,0.8)); z-index: 3;
@@ -141,7 +137,6 @@
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-        /* 第4層：動態傷害飄字 (最頂層) */
         .damage-text {
             position: absolute; color: white; font-weight: 900; font-size: 2rem;
             text-shadow: 2px 2px 0 #000; pointer-events: none; z-index: 10;
@@ -149,16 +144,22 @@
         }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-50px) scale(1.5); } }
 
-        /* --- 結算畫面設計 --- */
+        /* --- 結算畫面設計 (針對 html2canvas 優化) --- */
         #result-card {
-            background: #fff; color: #000; padding: 25px 25px 15px 25px; border-radius: 20px; margin: 10px 0 20px 0;
+            background: #fff; color: #000; padding: 25px 20px 15px 20px; border-radius: 20px; margin: 10px 0 20px 0;
             border: 6px solid var(--danger); position: relative; width: 100%; max-width: 320px;
-            box-sizing: border-box; overflow: hidden;
+            box-sizing: border-box; overflow: hidden; text-align: center;
         }
         
-        /* 確保字體在第4層 (最上方) */
+        /* 移除 flex 避免截圖引擎出錯，改用單純 block 排版 */
+        .result-avatar-container {
+            position: relative; z-index: 3; font-size: 7rem; line-height: 1;
+            margin: 15px 0; display: block;
+        }
+        .result-avatar-container div { display: block; } /* 強制上下排列 */
+
         .result-title { font-size: 2.2rem; font-weight: 900; color: var(--danger); margin: 0; z-index: 4; position: relative;}
-        #result-timer { color: #555; font-weight: 700; margin-bottom: 10px; position: relative; z-index: 4; }
+        #result-timer { color: #555; font-weight: 700; margin-bottom: 5px; z-index: 4; position: relative; }
         .result-text { font-size: 1.3rem; font-weight: 900; line-height: 1.5; margin: 10px 0 0 0; z-index: 4; position: relative;}
         
         .watermark-footer {
@@ -167,7 +168,7 @@
         }
 
         #final-image-container { width: 100%; max-width: 320px; display: none; margin-bottom: 15px; }
-        #final-image-container img { width: 100%; border-radius: 20px; box-shadow: 0 0 20px rgba(255,0,0,0.5); }
+        #final-image-container img { width: 100%; border-radius: 20px; box-shadow: 0 0 20px rgba(255,0,0,0.5); display: block;}
 
         .footer-info {
             margin-top: auto; padding: 10px 0; text-align: center; width: 100%;
@@ -277,24 +278,26 @@
         <p style="color:#aaa; font-size:0.9rem; margin-top:0; font-weight:700;">長按下方圖片即可儲存分享</p>
         
         <div id="result-card" style="display: block;">
-            <div id="result-bg" class="scene-bg"></div>
-            <div id="result-damage-layer" class="damage-layer"></div>
+            <div id="result-bg" class="scene-bg" style="z-index: 1;"></div>
             
-            <div class="result-title">K.O. 擊倒</div>
-            <div id="result-timer">行刑時間 00:00</div>
+            <div id="result-damage-layer" class="damage-layer" style="z-index: 2;"></div>
             
-            <div class="censored-face">
-                <div class="mosaic-avatar">
-                    <div id="result-head">👩🏻</div>
-                    <div id="result-body">👔</div>
-                </div>
+            <div style="position: relative; z-index: 4;">
+                <div class="result-title">K.O. 擊倒</div>
+                <div id="result-timer">行刑時間 00:00</div>
             </div>
             
-            <p class="result-text">今天不忍了！<br>成功擊退 <span id="result-crime" style="color:var(--danger); font-size:1.6rem;">[罪狀]</span><br>爽度 100%！</p>
+            <div class="result-avatar-container">
+                <div id="result-head" style="margin-bottom: -10px;">👩🏻</div>
+                <div id="result-body">👔</div>
+            </div>
             
-            <div class="watermark-footer">
-                <div style="font-size: 0.75rem;">© 2026 an App a Day Project.</div>
-                <div style="font-size: 0.6rem; transform: scale(0.95); margin-top: 2px;">⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。</div>
+            <div style="position: relative; z-index: 4;">
+                <p class="result-text">今天不忍了！<br>成功擊退 <span id="result-crime" style="color:var(--danger); font-size:1.6rem;">[罪狀]</span><br>爽度 100%！</p>
+                <div class="watermark-footer">
+                    <div style="font-size: 0.75rem;">© 2026 an App a Day Project.</div>
+                    <div style="font-size: 0.6rem; transform: scale(0.95); margin-top: 2px;">⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。</div>
+                </div>
             </div>
         </div>
 
@@ -444,7 +447,7 @@
                 document.body.classList.remove('shake-hard');
                 document.getElementById('arena-screen').style.display = 'none';
                 
-                // 將最新狀態的頭部(骷髏)與身體同步至結算畫面
+                // 同步最終骷髏狀態至結算畫面
                 document.getElementById('result-head').innerText = document.getElementById('arena-head').innerText;
                 document.getElementById('result-body').innerText = document.getElementById('arena-body').innerText;
                 
@@ -452,6 +455,8 @@
                 document.getElementById('result-damage-layer').innerHTML = document.getElementById('damage-layer').innerHTML;
                 
                 document.getElementById('result-screen').style.display = 'flex';
+                
+                // 觸發截圖引擎
                 generateFinalImage(); 
             }, 1500);
         }
@@ -483,7 +488,6 @@
             setTimeout(() => { avatar.style.transform = "scale(1) rotate(0deg)"; }, 100);
 
             const head = document.getElementById('arena-head');
-            // 修正：無差別判定，只要血量歸零，不論是哪一種 emoji 都會變成骷髏頭
             if (hp <= 0) {
                 head.innerText = "💀"; 
             } else {
@@ -504,19 +508,34 @@
         function generateFinalImage() {
             const targetCard = document.getElementById('result-card');
             
-            html2canvas(targetCard, {
-                backgroundColor: null,
-                scale: 2 
-            }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const imgElement = document.createElement('img');
-                imgElement.src = imgData;
-                imgElement.alt = "我的打小人戰績";
+            // 修正：截圖前先滾動至頂部，避免偏移 Bug
+            window.scrollTo(0, 0);
 
-                targetCard.style.display = 'none';
-                const container = document.getElementById('final-image-container');
-                container.appendChild(imgElement);
-                container.style.display = 'block';
+            // 修正：確保字體載入完成後再進行截圖，避免文字散開
+            document.fonts.ready.then(() => {
+                // 給瀏覽器一點時間重繪 DOM
+                setTimeout(() => {
+                    html2canvas(targetCard, {
+                        scale: 2, 
+                        useCORS: true,           // 強制開啟跨域解析，確保字體與圖片正確載入
+                        allowTaint: true,
+                        backgroundColor: '#ffffff', 
+                        scrollY: 0,
+                        scrollX: 0
+                    }).then(canvas => {
+                        const imgData = canvas.toDataURL('image/png');
+                        const imgElement = document.createElement('img');
+                        imgElement.src = imgData;
+                        imgElement.alt = "我的打小人戰績";
+
+                        targetCard.style.display = 'none';
+                        const container = document.getElementById('final-image-container');
+                        container.appendChild(imgElement);
+                        container.style.display = 'block';
+                    }).catch(err => {
+                        console.error("生成戰績圖時發生錯誤:", err);
+                    });
+                }, 300); 
             });
         }
     </script>
