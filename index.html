@@ -91,7 +91,7 @@
         .preview-emoji { font-size: 3.5rem; line-height: 1; width: 80px; text-align: center;}
         .part-label { font-size: 0.9rem; color: #aaa; font-weight: 700; width: 40px;}
 
-        /* --- 頂部完美對齊的數據列 --- */
+        /* --- 頂部面板 --- */
         .top-info { width: 100%; display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 700; color: #aaa; margin-top: 5px; align-items: flex-start;}
         .top-stats-box { width: 125px; display: flex; flex-direction: column; gap: 4px; }
         .stat-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
@@ -103,25 +103,19 @@
         #hp-bar { background: #00FF00; height: 100%; width: 100%; transition: width 0.2s, background 0.5s; }
         #rage-bar { background: var(--primary); height: 100%; width: 0%; transition: width 0.2s;}
 
-        /* --- 行刑場舞台設計 --- */
+        /* --- 行刑場 --- */
         #target-area {
             flex-grow: 1; width: 100%; max-width: 320px; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; position: relative; cursor: crosshair; 
-            min-height: 300px; border-radius: 15px; overflow: hidden; margin-bottom: 10px;
+            min-height: 280px; border-radius: 15px; overflow: hidden; margin-bottom: 10px;
         }
         .scene-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; opacity: 0.35; z-index: 1; pointer-events: none;
-        }
-        
-        /* 鎖定 300x300 的戰損區塊，保證複製到戰績圖時坐標 1:1 吻合 */
-        .arena-stage {
-            position: relative; width: 300px; height: 300px; z-index: 3;
-            display: flex; justify-content: center; align-items: center;
+            background-size: cover; background-position: center; opacity: 0.35; z-index: 1;
         }
         .damage-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 2; opacity: 0.65; overflow: hidden;
+            pointer-events: none; z-index: 2; opacity: 0.7; overflow: hidden;
         }
         .avatar-display {
             position: relative; display: flex; flex-direction: column; align-items: center;
@@ -154,10 +148,63 @@
         }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-50px) scale(1.5); } }
 
-        /* --- 載入中提示 --- */
         #loading-overlay { font-size: 1.2rem; font-weight: bold; color: var(--primary); margin: 20px 0; display: none; animation: pulse 1s infinite;}
+
+        /* ==============================================================
+           防破圖終極裝甲區塊 (絕對靜態化、防 Flexbox、強制像素化)
+           ============================================================== */
+        #result-card {
+            background-color: #2a2a2a; /* 底色保底 */
+            border: 6px solid var(--danger);
+            border-radius: 20px;
+            width: 340px; /* 強制固定寬度 */
+            height: 580px; /* 強制固定高度 */
+            margin: 10px auto 20px auto; 
+            position: relative; /* 內部全用 Absolute 定位 */
+            overflow: hidden; 
+            box-sizing: border-box; 
+            display: block; /* 絕對禁用 Flex/Grid */
+        }
         
-        #final-image-container { width: 100%; max-width: 320px; display: none; margin: 0 auto 15px auto; }
+        .rc-bg {
+            position: absolute; top: 0; left: 0; width: 328px; height: 568px;
+            background-size: cover; background-position: center; opacity: 0.35; z-index: 1;
+        }
+        .rc-damage {
+            position: absolute; top: 0; left: 0; width: 328px; height: 568px; z-index: 2; opacity: 0.7; overflow: hidden;
+        }
+        .rc-title {
+            position: absolute; top: 30px; left: 0; width: 328px; text-align: center;
+            font-size: 34px; font-weight: 900; color: #FF2400; z-index: 4; line-height: 1; letter-spacing: 0px !important;
+        }
+        
+        /* 完美對齊的數據區塊 (絕對定位版) */
+        .rc-stats {
+            position: absolute; top: 85px; left: 74px; width: 180px; height: 50px; z-index: 4;
+            font-size: 16px; font-weight: 700; color: #fff; letter-spacing: 0px !important;
+        }
+        .rc-stat-label-1 { position: absolute; top: 0; left: 0; }
+        .rc-stat-val-1 { position: absolute; top: 0; right: 0; color: #FFD700; }
+        .rc-stat-label-2 { position: absolute; top: 25px; left: 0; }
+        .rc-stat-val-2 { position: absolute; top: 25px; right: 0; color: #FFD700; }
+
+        /* 替身區塊 (指定 Emoji 字體庫防縮水) */
+        .rc-avatar {
+            position: absolute; top: 155px; left: 0; width: 328px; text-align: center; z-index: 3;
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif !important;
+        }
+        .rc-head { font-size: 120px; line-height: 120px; display: block; }
+        .rc-body { font-size: 120px; line-height: 120px; display: block; margin-top: -20px; }
+
+        /* 底部文字拆分為獨立的 div，防止 br 標籤斷行錯位 */
+        .rc-text-1 { position: absolute; top: 410px; left: 0; width: 328px; text-align: center; z-index: 4; font-size: 22px; font-weight: 900; color: #fff; letter-spacing: 0px !important; }
+        .rc-text-2 { position: absolute; top: 440px; left: 0; width: 328px; text-align: center; z-index: 4; font-size: 22px; font-weight: 900; color: #fff; letter-spacing: 0px !important; }
+        .rc-text-3 { position: absolute; top: 470px; left: 0; width: 328px; text-align: center; z-index: 4; font-size: 22px; font-weight: 900; color: #fff; letter-spacing: 0px !important; }
+        
+        .rc-footer-1 { position: absolute; top: 520px; left: 0; width: 328px; text-align: center; z-index: 4; font-size: 11px; font-weight: 700; color: #ccc; letter-spacing: 0px !important; }
+        .rc-footer-2 { position: absolute; top: 540px; left: 0; width: 328px; text-align: center; z-index: 4; font-size: 10px; font-weight: 700; color: #ccc; letter-spacing: 0px !important; transform: scale(0.95); }
+
+        #final-image-container { width: 100%; max-width: 340px; display: none; margin: 0 auto 15px auto; }
         #final-image-container img { width: 100%; border-radius: 20px; box-shadow: 0 0 20px rgba(255,0,0,0.5); display: block;}
 
         .footer-info {
@@ -253,13 +300,11 @@
         </div>
 
         <div id="target-area" onclick="attack('slap')">
-            <img id="arena-bg" class="scene-bg" src="" alt="">
-            <div class="arena-stage">
-                <div id="damage-layer" class="damage-layer"></div>
-                <div class="avatar-display" id="arena-avatar">
-                    <div id="arena-head">👩🏻</div>
-                    <div id="arena-body">👔</div>
-                </div>
+            <div id="arena-bg" class="scene-bg"></div>
+            <div id="damage-layer" class="damage-layer"></div>
+            <div class="avatar-display" id="arena-avatar">
+                <div id="arena-head">👩🏻</div>
+                <div id="arena-body">👔</div>
             </div>
         </div>
 
@@ -280,38 +325,32 @@
         
         <div id="loading-overlay">⏳ 正在生成完美戰績圖...</div>
 
-        <div id="result-card" style="width: 320px; height: 560px; position: relative; background: #fff; border: 6px solid #FF2400; border-radius: 20px; overflow: hidden; box-sizing: border-box; margin: 0 auto; display: block; font-family: 'jf-openhuninn-1.1', 'Noto Sans TC', sans-serif;">
+        <div id="result-card" style="display: block;">
             
-            <img id="result-bg" style="position: absolute; top: 0; left: 0; width: 308px; height: 548px; object-fit: cover; opacity: 0.35; z-index: 1;" src="" alt="">
-
-            <div style="position: absolute; top: 25px; left: 0; width: 308px; text-align: center; z-index: 4;">
-                <div style="font-size: 34px; font-weight: 900; color: #FF2400; line-height: 1;">K.O. 擊倒</div>
+            <div id="result-bg" class="rc-bg"></div>
+            
+            <div id="result-damage-layer" class="rc-damage"></div>
+            
+            <div class="rc-title">K.O. 擊倒</div>
+            
+            <div class="rc-stats">
+                <div class="rc-stat-label-1">行刑次數</div>
+                <div id="result-hits" class="rc-stat-val-1">0 次</div>
+                <div class="rc-stat-label-2">行刑時間</div>
+                <div id="result-timer" class="rc-stat-val-2">00:00</div>
             </div>
-
-            <div style="position: absolute; top: 75px; left: 79px; width: 150px; height: 45px; z-index: 4;">
-                <div style="position: absolute; top: 0; left: 0; width: 100%; font-size: 16px; color: #555; font-weight: 700;">
-                    <span style="position: absolute; left: 0;">行刑次數</span>
-                    <span id="result-hits" style="position: absolute; right: 0;">0 次</span>
-                </div>
-                <div style="position: absolute; top: 25px; left: 0; width: 100%; font-size: 16px; color: #555; font-weight: 700;">
-                    <span style="position: absolute; left: 0;">行刑時間</span>
-                    <span id="result-timer" style="position: absolute; right: 0;">00:00</span>
-                </div>
+            
+            <div class="rc-avatar">
+                <div id="result-head" class="rc-head">👩🏻</div>
+                <div id="result-body" class="rc-body">👔</div>
             </div>
-
-            <div style="position: absolute; top: 125px; left: 4px; width: 300px; height: 300px; z-index: 3;">
-                <div id="result-damage-layer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0.65;"></div>
-                
-                <div style="position: absolute; top: 40px; left: 0; width: 300px; text-align: center; z-index: 3;">
-                    <div id="result-head" style="font-size: 100px; line-height: 1;">👩🏻</div>
-                    <div id="result-body" style="font-size: 100px; line-height: 1; margin-top: -15px;">👔</div>
-                </div>
-            </div>
-
-            <div style="position: absolute; top: 420px; left: 0; width: 308px; text-align: center; z-index: 4;">
-                <div style="font-size: 22px; font-weight: 900; color: #000; line-height: 1.5;">今天不忍了！<br>成功擊退 <span id="result-crime" style="color:#FF2400;">[罪狀]</span><br>爽度 100%！</div>
-                <div style="font-size: 11px; color: rgba(0,0,0,0.5); font-weight: 700; margin-top: 15px; line-height: 1.4;">© 2026 an App a Day Project.<br>⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。</div>
-            </div>
+            
+            <div class="rc-text-1">今天不忍了！</div>
+            <div class="rc-text-2">成功擊退 <span id="result-crime" style="color:#FF2400;">[罪狀]</span></div>
+            <div class="rc-text-3">爽度 100%！</div>
+            
+            <div class="rc-footer-1">© 2026 an App a Day Project.</div>
+            <div class="rc-footer-2">⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。</div>
         </div>
 
         <div id="final-image-container"></div>
@@ -369,6 +408,7 @@
             const name = document.getElementById('target-name').value.trim() || "無名氏";
             const crime = document.getElementById('crime-tag').options[document.getElementById('crime-tag').selectedIndex].text;
             const sceneKey = document.getElementById('scene-select').value;
+            const bgUrl = `url('${bgMap[sceneKey]}')`;
             
             document.getElementById('display-name').innerText = `目標：${name} (${crime.split(' ')[1]})`;
             document.getElementById('result-crime').innerText = crime.split(' ')[1];
@@ -376,8 +416,9 @@
             document.getElementById('arena-head').innerText = heads[headIdx];
             document.getElementById('arena-body').innerText = bodies[bodyIdx];
             
-            document.getElementById('arena-bg').src = bgMap[sceneKey];
-            document.getElementById('result-bg').src = bgMap[sceneKey];
+            // 使用 CSS background-image，保證不拉長變形
+            document.getElementById('arena-bg').style.backgroundImage = bgUrl;
+            document.getElementById('result-bg').style.backgroundImage = bgUrl;
 
             document.getElementById('setup-screen').style.display = 'none';
             document.getElementById('arena-screen').style.display = 'flex';
@@ -431,12 +472,12 @@
             const dmgLayer = document.getElementById('damage-layer');
             const mark = document.createElement('div');
             mark.innerText = weaponEmojis[type];
+            // 強制設定絕對定位與圖形 Emoji 字體，防止 iOS 截圖時縮水
             mark.style.position = 'absolute';
-            // 使用絕對百分比定位，保證 300x300 容器內的複製不會偏移
-            mark.style.left = `${10 + Math.random() * 80}%`; 
-            mark.style.top = `${10 + Math.random() * 80}%`;
-            // 強制使用 px 作為字體單位，防範 html2canvas rem 縮放 Bug
-            mark.style.fontSize = `${24 + Math.random() * 24}px`;
+            mark.style.left = `${5 + Math.random() * 85}%`; 
+            mark.style.top = `${5 + Math.random() * 85}%`;
+            mark.style.fontSize = `${30 + Math.random() * 20}px`;
+            mark.style.fontFamily = "'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif";
             dmgLayer.appendChild(mark);
         }
 
@@ -462,7 +503,7 @@
             const avatar = document.getElementById('arena-avatar');
             avatar.style.transform = "scale(2.5)";
             
-            // 暫存死亡時的臉，確保待會印在戰績圖上的是正確的頭像
+            // 暫存死亡時的臉，確保戰績圖上印的是骷髏頭
             const finalHeadEmoji = document.getElementById('arena-head').innerText;
             
             document.getElementById('arena-head').innerText = "💥";
@@ -473,14 +514,14 @@
                 document.body.classList.remove('shake-hard');
                 document.getElementById('arena-screen').style.display = 'none';
                 
-                // 還原死亡頭像，寫入隱藏的戰績卡
+                // 還原死亡頭像，寫入戰績卡
                 document.getElementById('result-head').innerText = finalHeadEmoji;
                 document.getElementById('result-body').innerText = document.getElementById('arena-body').innerText;
                 document.getElementById('result-damage-layer').innerHTML = document.getElementById('damage-layer').innerHTML;
                 
                 document.getElementById('result-screen').style.display = 'flex';
                 
-                // 執行終極安全的截圖流程
+                // 執行安全截圖
                 generateFinalImage(); 
             }, 1500);
         }
@@ -533,18 +574,18 @@
             const targetCard = document.getElementById('result-card');
             const loadingText = document.getElementById('loading-overlay');
             
-            // 截圖前確保畫面在最頂部，防破圖鐵律
+            // 截圖前確保滾動條在頂部
             window.scrollTo(0, 0);
             loadingText.style.display = 'block';
 
             document.fonts.ready.then(() => {
-                // 給予 800ms 緩衝期，讓 iOS 把所有的字體與 emoji 繪製完畢
+                // 給予 800ms 緩衝期，等待 iOS 重繪 DOM
                 setTimeout(() => {
                     html2canvas(targetCard, {
                         scale: 2, 
                         useCORS: true,
                         allowTaint: true,
-                        backgroundColor: '#ffffff', 
+                        backgroundColor: '#1a1a1a', // 給定固定的底色
                         scrollY: 0,
                         scrollX: 0
                     }).then(canvas => {
@@ -554,11 +595,11 @@
                         imgElement.alt = "我的打小人戰績";
 
                         loadingText.style.display = 'none';
-                        targetCard.style.display = 'none'; // 隱藏原生 HTML
+                        targetCard.style.display = 'none'; // 隱藏原本的 HTML 結構
                         
                         const container = document.getElementById('final-image-container');
                         container.appendChild(imgElement);
-                        container.style.display = 'block'; // 秀出成功截圖
+                        container.style.display = 'block'; // 秀出圖片
                     }).catch(err => {
                         console.error("生成戰績圖時發生錯誤:", err);
                         loadingText.innerText = "⚠️ 圖片生成失敗，請重試";
