@@ -93,10 +93,12 @@
 
         /* --- 頂部狀態列對齊優化 --- */
         .top-info { width: 100%; display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 700; color: #aaa; margin-top: 5px; align-items: flex-start;}
-        .top-stats-box { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
-        .stat-row { display: flex; justify-content: space-between; width: 115px; }
-        .stat-label { text-align: left; }
-        .stat-val { text-align: right; color: #fff;}
+        
+        /* 完美對齊的數據容器 */
+        .stats-box { width: 130px; display: block; text-align: left; position: relative; }
+        .stat-row { position: relative; height: 20px; margin-bottom: 2px; width: 100%; }
+        .stat-label { position: absolute; left: 0; }
+        .stat-val { position: absolute; right: 0; color: #fff; }
         
         .status-area { width: 100%; max-width: 320px; text-align: left; margin-top: 10px; font-weight: 700; }
         .bar-container { background: #333; height: 18px; border-radius: 10px; margin-bottom: 8px; overflow: hidden; border: 2px solid #555;}
@@ -109,9 +111,10 @@
             min-height: 220px; border-radius: 15px; overflow: hidden; margin-bottom: 10px;
         }
         
+        /* 使用 img 標籤做背景，截圖引擎最穩定 */
         .scene-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-size: cover; background-position: center; opacity: 0.35; z-index: 1;
+            object-fit: cover; opacity: 0.35; z-index: 1; pointer-events: none;
         }
         .damage-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -119,8 +122,7 @@
         }
         .avatar-display {
             position: relative; display: flex; flex-direction: column; align-items: center;
-            font-size: 6.5rem; line-height: 1; user-select: none; transition: transform 0.1s;
-            filter: drop-shadow(0 0 10px rgba(0,0,0,0.8)); z-index: 3;
+            font-size: 6.5rem; line-height: 1; user-select: none; transition: transform 0.1s; z-index: 3;
         }
 
         .weapon-rack { width: 100%; max-width: 320px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding-bottom: 10px; }
@@ -148,30 +150,32 @@
         }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-50px) scale(1.5); } }
 
-        /* --- 結算畫面設計 (極度靜態化，防 html2canvas 破圖) --- */
+        /* --- 戰績圖卡片 (徹底靜態化，防 html2canvas 破圖) --- */
         #result-card {
             background: #fff; color: #000; padding: 25px 20px 15px 20px; border-radius: 20px; 
-            margin: 10px auto 20px auto; /* 置中 */
+            margin: 10px auto 20px auto; 
             border: 6px solid var(--danger); position: relative; 
-            width: 320px; /* 強制固定寬度 */
+            width: 320px; height: 500px; /* 固定尺寸保證排版不跑 */
             box-sizing: border-box; overflow: hidden; text-align: center;
-            display: block; /* 移除 Flex，防止元素亂飛 */
+            display: block; /* 禁用 Flexbox */
         }
         
-        .result-title { font-size: 2.2rem; font-weight: 900; color: var(--danger); margin: 0 0 10px 0; z-index: 4; position: relative;}
+        .result-title { font-size: 2.2rem; font-weight: 900; color: var(--danger); margin: 0 0 15px 0; z-index: 4; position: relative;}
         
-        /* 戰績圖中的數據對齊 */
+        /* 戰績圖內的完美對齊數據區塊 */
         .result-stats-box {
             position: relative; z-index: 4; margin: 0 auto 15px auto; width: 140px;
-            color: #555; font-weight: 700; font-size: 1rem;
+            color: #555; font-weight: 700; font-size: 1.1rem;
         }
+        .result-stats-box .stat-val { color: #555; }
         
+        /* 替身區塊強制區塊排版 */
         .result-avatar-container {
-            position: relative; z-index: 3; font-size: 7rem; line-height: 1;
-            margin: 0 auto; display: block;
+            position: relative; z-index: 3; font-size: 6.5rem; line-height: 1;
+            margin: 0 auto; display: block; height: 180px;
         }
-        /* 確保頭部跟身體以 Block 顯示，不會亂跑 */
-        .result-avatar-container div { display: block; } 
+        #result-head { margin-bottom: -15px; display: block; }
+        #result-body { display: block; }
         
         .result-text { font-size: 1.3rem; font-weight: 900; line-height: 1.5; margin: 15px 0 0 0; z-index: 4; position: relative;}
         
@@ -182,6 +186,8 @@
 
         #final-image-container { width: 100%; max-width: 320px; display: none; margin: 0 auto 15px auto; }
         #final-image-container img { width: 100%; border-radius: 20px; box-shadow: 0 0 20px rgba(255,0,0,0.5); display: block;}
+
+        #loading-overlay { font-size: 1.2rem; font-weight: bold; color: var(--primary); margin: 20px 0; display: none; animation: pulse 1s infinite;}
 
         .footer-info {
             margin-top: auto; padding: 10px 0; text-align: center; width: 100%;
@@ -256,7 +262,7 @@
     <div id="arena-screen" class="screen-container" style="display: none;">
         <div class="top-info">
             <span id="display-name" style="color: var(--primary);">目標：</span>
-            <div class="top-stats-box">
+            <div class="stats-box">
                 <div class="stat-row">
                     <span class="stat-label">行刑次數</span>
                     <span class="stat-val" id="game-hits">0 次</span>
@@ -276,7 +282,7 @@
         </div>
 
         <div id="target-area" onclick="attack('slap')">
-            <div id="arena-bg" class="scene-bg"></div>
+            <img id="arena-bg" class="scene-bg" src="" alt="">
             <div id="damage-layer" class="damage-layer"></div>
             <div class="avatar-display" id="arena-avatar">
                 <div id="arena-head">👩🏻</div>
@@ -295,31 +301,31 @@
         </div>
     </div>
 
-    <div id="result-screen" class="screen-container" style="display: none; justify-content: center;">
-        <h1 style="color: #fff; margin-bottom: 10px; font-size: 2rem;">本日戰績</h1>
-        <p style="color:#aaa; font-size:0.9rem; margin-top:0; font-weight:700;">長按下方圖片即可儲存分享</p>
+    <div id="result-screen" class="screen-container" style="display: none; justify-content: flex-start;">
+        <h1 style="color: #fff; margin-bottom: 5px; font-size: 2rem;">本日戰績</h1>
+        <p style="color:#aaa; font-size:0.9rem; margin-top:0; margin-bottom: 10px; font-weight:700;">長按下方圖片即可儲存分享</p>
         
+        <div id="loading-overlay">⏳ 正在生成完美戰績圖...</div>
+
         <div id="result-card" style="display: block;">
-            <div id="result-bg" class="scene-bg" style="z-index: 1;"></div>
-            
+            <img id="result-bg" class="scene-bg" style="z-index: 1;" src="" alt="">
             <div id="result-damage-layer" class="damage-layer" style="z-index: 2;"></div>
             
-            <div style="position: relative; z-index: 4;">
-                <div class="result-title">K.O. 擊倒</div>
-                <div class="result-stats-box">
-                    <div class="stat-row" style="width: 100%;">
-                        <span class="stat-label">行刑次數</span>
-                        <span class="stat-val" style="color:#555;" id="result-hits">0 次</span>
-                    </div>
-                    <div class="stat-row" style="width: 100%;">
-                        <span class="stat-label">行刑時間</span>
-                        <span class="stat-val" style="color:#555;" id="result-timer">00:00</span>
-                    </div>
+            <div class="result-title">K.O. 擊倒</div>
+            
+            <div class="stats-box result-stats-box">
+                <div class="stat-row">
+                    <span class="stat-label">行刑次數</span>
+                    <span class="stat-val" id="result-hits">0 次</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">行刑時間</span>
+                    <span class="stat-val" id="result-timer">00:00</span>
                 </div>
             </div>
             
             <div class="result-avatar-container">
-                <div id="result-head" style="margin-bottom: -10px;">👩🏻</div>
+                <div id="result-head">👩🏻</div>
                 <div id="result-body">👔</div>
             </div>
             
@@ -327,7 +333,7 @@
                 <p class="result-text">今天不忍了！<br>成功擊退 <span id="result-crime" style="color:var(--danger); font-size:1.6rem;">[罪狀]</span><br>爽度 100%！</p>
                 <div class="watermark-footer">
                     <div style="font-size: 0.75rem;">© 2026 an App a Day Project.</div>
-                    <div style="font-size: 0.6rem; transform: scale(0.95); margin-top: 2px;">⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。</div>
+                    <div style="font-size: 0.6rem; margin-top: 2px;">⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。</div>
                 </div>
             </div>
         </div>
@@ -335,7 +341,7 @@
         <div id="final-image-container"></div>
 
         <div class="input-wrapper">
-            <button class="btn-primary ui-element" onclick="location.reload()">🔄 再打一個</button>
+            <button class="btn-primary ui-element" onclick="location.reload()" style="margin-top: 10px;">🔄 再打一個</button>
         </div>
         
         <div class="footer-info">
@@ -367,7 +373,7 @@
         let hp = 100, rage = 0;
         let isExploding = false;
         let startTime, timerInterval;
-        let hitCount = 0; // 新增：打擊次數統計
+        let hitCount = 0; 
         
         const heads = ["👩🏻", "👨🏻", "🧑🏻", "🧑🏻‍🦲", "👨🏻‍🦳", "🧓🏻", "👱🏻‍♀️", "🧔🏻‍♂️", "👽", "💩", "🤑", "🤮", "🧟", "🐸", "🍔", "🌭", "🥟", "🍘", "🤿", "🗿", "😈", "👹", "🤡", "🤖"];
         const bodies = ["👔", "👗", "🩳", "🥋", "🧥", "🦺", "🥼", "👚", "👕", "👙", "🩱", "🥻", "👘", "🎽", "🧣", "🍯", "🍵", "🥃", "🥡", "🕳️", "🧻", "🚽", "🪣", "🛒"];
@@ -387,7 +393,6 @@
             const name = document.getElementById('target-name').value.trim() || "無名氏";
             const crime = document.getElementById('crime-tag').options[document.getElementById('crime-tag').selectedIndex].text;
             const sceneKey = document.getElementById('scene-select').value;
-            const bgUrl = `url('${bgMap[sceneKey]}')`;
             
             document.getElementById('display-name').innerText = `目標：${name} (${crime.split(' ')[1]})`;
             document.getElementById('result-crime').innerText = crime.split(' ')[1];
@@ -395,13 +400,13 @@
             document.getElementById('arena-head').innerText = heads[headIdx];
             document.getElementById('arena-body').innerText = bodies[bodyIdx];
             
-            document.getElementById('arena-bg').style.backgroundImage = bgUrl;
-            document.getElementById('result-bg').style.backgroundImage = bgUrl;
+            // 使用 src 替換 CSS background，截圖引擎更穩定
+            document.getElementById('arena-bg').src = bgMap[sceneKey];
+            document.getElementById('result-bg').src = bgMap[sceneKey];
 
             document.getElementById('setup-screen').style.display = 'none';
             document.getElementById('arena-screen').style.display = 'flex';
 
-            // 初始化數據
             hitCount = 0;
             document.getElementById('game-hits').innerText = `0 次`;
 
@@ -421,7 +426,7 @@
             if (isExploding) return;
             if (event) event.stopPropagation();
 
-            hitCount++; // 增加行刑次數
+            hitCount++; 
             document.getElementById('game-hits').innerText = `${hitCount} 次`;
 
             let dmg = 0, rg = 0, txt = "";
@@ -454,8 +459,8 @@
             mark.style.position = 'absolute';
             mark.style.left = `${10 + Math.random() * 80}%`; 
             mark.style.top = `${10 + Math.random() * 80}%`;
-            mark.style.transform = `rotate(${Math.random() * 360}deg) scale(${0.8 + Math.random() * 0.5})`;
-            mark.style.fontSize = '2rem';
+            // 移除 rotate 防止 iOS html2canvas 破圖，純粹靠隨機大小與座標製造凌亂感
+            mark.style.fontSize = `${1.5 + Math.random() * 1.5}rem`;
             dmgLayer.appendChild(mark);
         }
 
@@ -466,7 +471,6 @@
             isExploding = true; 
             clearInterval(timerInterval); 
             
-            // 同步數據至結算畫面
             document.getElementById('result-timer').innerText = document.getElementById('game-timer').innerText;
             document.getElementById('result-hits').innerText = document.getElementById('game-hits').innerText;
             
@@ -481,6 +485,9 @@
             const avatar = document.getElementById('arena-avatar');
             avatar.style.transform = "scale(2.5)";
             
+            // 儲存死亡時的臉，確保戰績圖上印的是骷髏頭而不是爆炸符號
+            const finalHeadEmoji = document.getElementById('arena-head').innerText;
+            
             document.getElementById('arena-head').innerText = "💥";
             document.getElementById('arena-body').style.display = "none";
             document.getElementById('arena-head').style.transform = "translateY(25px)";
@@ -489,13 +496,13 @@
                 document.body.classList.remove('shake-hard');
                 document.getElementById('arena-screen').style.display = 'none';
                 
-                document.getElementById('result-head').innerText = document.getElementById('arena-head').innerText;
+                // 還原死亡頭像
+                document.getElementById('result-head').innerText = finalHeadEmoji;
                 document.getElementById('result-body').innerText = document.getElementById('arena-body').innerText;
                 document.getElementById('result-damage-layer').innerHTML = document.getElementById('damage-layer').innerHTML;
                 
                 document.getElementById('result-screen').style.display = 'flex';
                 
-                // 呼叫優化後的截圖函數
                 generateFinalImage(); 
             }, 1500);
         }
@@ -546,10 +553,13 @@
 
         function generateFinalImage() {
             const targetCard = document.getElementById('result-card');
+            const loadingText = document.getElementById('loading-overlay');
+            
             window.scrollTo(0, 0);
+            loadingText.style.display = 'block';
 
             document.fonts.ready.then(() => {
-                // 延長至 500ms，確保 iOS 瀏覽器有充分時間完成 DOM 重繪
+                // 給予 800ms 緩衝期，確保 iOS 有充裕時間完成字體與 emoji 的 DOM 重繪
                 setTimeout(() => {
                     html2canvas(targetCard, {
                         scale: 2, 
@@ -564,14 +574,17 @@
                         imgElement.src = imgData;
                         imgElement.alt = "我的打小人戰績";
 
+                        loadingText.style.display = 'none';
                         targetCard.style.display = 'none';
+                        
                         const container = document.getElementById('final-image-container');
                         container.appendChild(imgElement);
                         container.style.display = 'block';
                     }).catch(err => {
                         console.error("生成戰績圖時發生錯誤:", err);
+                        loadingText.innerText = "⚠️ 圖片生成失敗，請重試";
                     });
-                }, 500); 
+                }, 800); 
             });
         }
     </script>
