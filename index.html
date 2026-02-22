@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>小人退散：今天不忍了！</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Noto+Sans+TC:wght@700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <meta name="description" content="超舒壓互動神器！自訂你的出氣包，把平時受的氣全部發洩出來！">
@@ -29,8 +29,8 @@
         
         body {
             margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-light);
-            /* 統一字體，確保跨平台顯示圓潤感 */
-            font-family: 'M PLUS Rounded 1c', 'Nunito', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            /* 加入 Noto Sans TC 作為強力後備，確保漢字粗體顯示正常 */
+            font-family: 'M PLUS Rounded 1c', 'Noto Sans TC', 'Nunito', sans-serif;
             overflow: hidden; display: flex; flex-direction: column;
             align-items: center; justify-content: flex-start; height: 100vh;
             touch-action: manipulation;
@@ -57,9 +57,9 @@
             color: var(--primary); 
             font-size: clamp(1.5rem, 6.5vw, 2.2rem); 
             white-space: nowrap; text-shadow: 2px 2px 0px var(--danger); 
-            margin: 0; line-height: 1.2; font-weight: 700; /* 統一粗細 */
+            margin: 0; line-height: 1.2; font-weight: 900;
         }
-        .subtitle { color: var(--danger); font-size: 1.3rem; font-weight: 700; margin-top: 5px; }
+        .subtitle { color: var(--danger); font-size: 1.3rem; font-weight: 900; margin-top: 5px; }
         h2 { font-size: 1.2rem; margin: 10px 0; color: #fff; font-weight: 700;}
         
         .input-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 15px; }
@@ -122,7 +122,7 @@
         
         #ultimate-btn {
             grid-column: span 2; background: #555; border: 2px solid #333; color: #888;
-            padding: 12px; font-size: 1.2rem; font-weight: 700; border-radius: 12px; transition: all 0.3s;
+            padding: 12px; font-size: 1.2rem; font-weight: 900; border-radius: 12px; transition: all 0.3s;
         }
         #ultimate-btn.ready {
             background: var(--danger); border-color: var(--primary); color: white;
@@ -132,7 +132,7 @@
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
         .damage-text {
-            position: absolute; color: white; font-weight: 700; font-size: 2rem;
+            position: absolute; color: white; font-weight: 900; font-size: 2rem;
             text-shadow: 2px 2px 0 #000; pointer-events: none; z-index: 10;
             animation: floatUp 0.8s ease-out forwards;
         }
@@ -150,10 +150,11 @@
             background: black; z-index: 5;
         }
         .mosaic-avatar { font-size: 7rem; line-height: 1; display: flex; flex-direction: column; filter: blur(1px) grayscale(30%); }
-        .result-title { font-size: 2.2rem; font-weight: 700; color: var(--danger); margin: 0 0 10px 0; z-index: 2; position: relative;}
-        .result-text { font-size: 1.3rem; font-weight: 700; line-height: 1.5; margin: 10px 0 0 0; z-index: 2; position: relative;}
+        .result-title { font-size: 2.2rem; font-weight: 900; color: var(--danger); margin: 0; z-index: 2; position: relative;}
+        /* 新增：結算時間樣式 */
+        #result-timer { color: #555; font-weight: 700; margin-bottom: 10px; position: relative; z-index: 2; }
+        .result-text { font-size: 1.3rem; font-weight: 900; line-height: 1.5; margin: 10px 0 0 0; z-index: 2; position: relative;}
         
-        /* 戰績圖浮水印樣式 */
         .watermark-footer {
             margin-top: 15px; position: relative; z-index: 2; text-align: center;
             color: rgba(0, 0, 0, 0.4); font-weight: 700; line-height: 1.2;
@@ -216,7 +217,7 @@
                 <option value="office">☕ 辦公室茶水間</option>
                 <option value="alley">🗑️ 陰暗後巷</option>
                 <option value="hell">🔥 地獄審判台</option>
-                <option value="toilet">🪰 臭氣熏天的廁所</option>
+                <option value="toilet">🪰 臭氣熏天廁所</option>
                 <option value="meeting">📉 高壓會議室</option>
                 <option value="bedroom">🛏️ 失眠的臥室</option>
             </select>
@@ -254,11 +255,11 @@
         </div>
 
         <div class="weapon-rack">
-            <button class="weapon-btn" onclick="attack('slap', event)">👋 連環巴掌</button>
             <button class="weapon-btn" onclick="attack('spit', event)">💦 吐口水</button>
             <button class="weapon-btn" onclick="attack('egg', event)">🥚 丟臭雞蛋</button>
-            <button class="weapon-btn" onclick="attack('needle', event)">📌 針扎詛咒</button>
+            <button class="weapon-btn" onclick="attack('slap', event)">👋 連環巴掌</button>
             <button class="weapon-btn" onclick="attack('slipper', event)">🩴 藍白拖</button>
+            <button class="weapon-btn" onclick="attack('needle', event)">📌 針扎詛咒</button>
             <button class="weapon-btn" onclick="attack('lightning', event)">⚡ 天打雷劈</button>
             <button id="ultimate-btn" onclick="ultimateAttack()" disabled>🔥 業力引爆 (怒氣沖天) 🔥</button>
         </div>
@@ -271,6 +272,7 @@
         <div id="result-card" style="display: block;">
             <div id="result-bg" class="scene-bg"></div>
             <div class="result-title">K.O. 擊倒</div>
+            <div id="result-timer">行刑時間 00:00</div>
             <div class="censored-face">
                 <div class="mosaic-avatar">
                     <div id="result-head">👩🏻</div>
@@ -313,9 +315,11 @@
         };
 
         let hp = 100, rage = 0;
-        let isExploding = false; // 取代原本有衝突的 isDead 狀態
+        let isExploding = false;
         let startTime, timerInterval;
         
+        // 定義哪些是人類頭像 (需要變骷髏的)，哪些是非人類
+        const humanHeadsEndIndex = 8; 
         const heads = ["👩🏻", "👨🏻", "🧑🏻", "🧑🏻‍🦲", "👨🏻‍🦳", "🧓🏻", "👱🏻‍♀️", "🧔🏻‍♂️", "👽", "💩"];
         const bodies = ["👔", "👗", "🩳", "🥋", "🧥", "🦺", "🥼", "👚", "👕"];
         let headIdx = 0, bodyIdx = 0;
@@ -355,6 +359,7 @@
         }
 
         function updateTimer() {
+            // 只有在真正引爆時才停止計時
             if(isExploding) clearInterval(timerInterval);
             let diff = Math.floor((Date.now() - startTime) / 1000);
             let m = String(Math.floor(diff / 60)).padStart(2, '0');
@@ -363,17 +368,18 @@
         }
 
         function attack(type, event) {
-            if (isExploding) return;
+            if (isExploding) return; // 引爆中不可攻擊
             if (event) event.stopPropagation();
 
             let dmg = 0, rg = 0, txt = "";
+            // 更新後的傷害數值 (1-6) 與怒氣值
             switch(type) {
-                case 'spit': dmg = 2; rg = 5; txt = "呸！"; break;
-                case 'slap': dmg = 5; rg = 8; txt = "啪！"; break;
-                case 'egg': dmg = 8; rg = 10; txt = "噗滋！"; break;
-                case 'needle': dmg = 12; rg = 15; txt = "扎！"; break;
-                case 'slipper': dmg = 18; rg = 20; txt = "轟！"; break;
-                case 'lightning': dmg = 25; rg = 25; txt = "⚡雷擊"; break;
+                case 'spit': dmg = 1; rg = 3; txt = "呸！"; break;
+                case 'egg': dmg = 2; rg = 4; txt = "噗滋！"; break;
+                case 'slap': dmg = 3; rg = 5; txt = "啪！"; break;
+                case 'slipper': dmg = 4; rg = 6; txt = "轟！"; break;
+                case 'needle': dmg = 5; rg = 8; txt = "扎！"; break;
+                case 'lightning': dmg = 6; rg = 10; txt = "⚡雷擊"; break;
             }
 
             if(sounds[type]) {
@@ -386,16 +392,17 @@
             updateUI(); triggerVisualEffects(dmg, txt);
         }
 
-        // 獨立的大招觸發與動畫邏輯
         function ultimateAttack() {
-            if (isExploding) return; // 避免重複觸發
-            if (rage < 100 && hp > 0) return; // 保護機制：未滿怒氣且未死則無法按
+            if (isExploding) return;
+            // 修改判定：HP歸零 或 怒氣滿 都可以按
+            if (rage < 100 && hp > 0) return; 
 
-            isExploding = true;
-            hp = 0;
-            rage = 100; // 強制滿怒氣畫面
-            updateUI();
-            clearInterval(timerInterval);
+            isExploding = true; // 標記為正在引爆
+            clearInterval(timerInterval); // 停止計時
+            // 將最終時間填入結算卡片
+            document.getElementById('result-timer').innerText = document.getElementById('game-timer').innerText;
+            
+            hp = 0; rage = 100; updateUI();
             
             if(sounds.ultimate) { 
                 let ultClone = sounds.ultimate.cloneNode();
@@ -406,12 +413,10 @@
             const avatar = document.getElementById('arena-avatar');
             avatar.style.transform = "scale(2.5)";
             
-            // 替換為單一顆爆炸符號並置中
             document.getElementById('arena-head').innerText = "💥";
             document.getElementById('arena-body').style.display = "none";
             document.getElementById('arena-head').style.transform = "translateY(25px)";
 
-            // 動畫結束後切換結算畫面
             setTimeout(() => {
                 document.body.classList.remove('shake-hard');
                 document.getElementById('arena-screen').style.display = 'none';
@@ -430,6 +435,7 @@
             else hpBar.style.background = "#FF0000";
 
             const ultBtn = document.getElementById('ultimate-btn');
+            // 修改按鈕啟用條件：怒氣滿 或 HP歸零
             if (rage >= 100 || hp <= 0) { 
                 ultBtn.disabled = false; ultBtn.classList.add('ready'); 
             } else { 
@@ -447,11 +453,13 @@
             setTimeout(() => { avatar.style.transform = "scale(1) rotate(0deg)"; }, 100);
 
             const head = document.getElementById('arena-head');
-            if(headIdx < 8) { 
-                if (hp <= 0) head.innerText = "💀";
-                else if (hp < 30) head.innerText = "🥵";
-                else if (hp < 60) head.innerText = "🤕";
-                else head.innerText = "😧";
+            // 只有人類頭像會變骷髏
+            if(headIdx < humanHeadsEndIndex) { 
+                if (hp <= 0) {
+                    head.innerText = "💀"; // HP歸零變骷髏
+                } else {
+                    head.innerText = heads[headIdx]; // 其他時候維持原樣
+                }
             }
 
             const area = document.getElementById('target-area');
@@ -464,11 +472,7 @@
             area.appendChild(el);
             setTimeout(() => { area.removeChild(el); }, 800);
             
-            // HP 歸零自動觸發大招 (延遲0.8秒讓使用者看到 💀 表情)
-            if (hp <= 0 && !isExploding) {
-                clearInterval(timerInterval);
-                setTimeout(() => { ultimateAttack(); }, 800); 
-            }
+            // 移除自動觸發大招的邏輯，現在完全手動
         }
 
         function generateFinalImage() {
