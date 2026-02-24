@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>小人退散：今天不忍了！</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700&family=Noto+Sans+TC:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+Rounded+1c:wght@700&family=Noto+Sans+TC:wght@700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/jf-openhuninn@1.1.1/jf-openhuninn-1.1.min.css" rel="stylesheet">
     
     <meta name="description" content="超舒壓互動神器！自訂你的出氣包，把平時受的氣全部發洩出來！">
@@ -29,8 +29,8 @@
         
         body {
             margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-light);
-            /* v9.0: 調整字體優先順序，並統一使用 bold (700) 以解決缺字問題 */
-            font-family: 'jf-openhuninn-1.1', 'M PLUS Rounded 1c', 'Noto Sans TC', sans-serif;
+            /* v10.0: 優先使用 Kosugi Maru 以解決缺字問題，統一使用 bold (700) */
+            font-family: 'Kosugi Maru', 'jf-openhuninn-1.1', 'M PLUS Rounded 1c', 'Noto Sans TC', sans-serif;
             font-weight: bold;
             overflow: hidden; display: flex; flex-direction: column;
             align-items: center; justify-content: flex-start; height: 100vh;
@@ -149,7 +149,7 @@
 
         #loading-overlay { font-size: 1.2rem; color: var(--primary); margin: 15px 0; display: none; animation: pulse 1s infinite;}
 
-        /* --- 視覺預覽版戰績卡片 --- */
+        /* --- 視覺預覽版戰績卡片 (配合 Canvas v10.0 座標調整) --- */
         #result-card {
             background: #fff; color: #000; padding: 0;
             border-radius: 20px; margin: 10px auto 20px auto;
@@ -178,24 +178,24 @@
         .result-stat-line { position: relative; height: 20px; display: block; }
         .result-stat-val { position: absolute; right: 0; top: 0; color: #555; }
 
-        /* v9.0: 預覽版替身位置向上平移 25px 以匹配 Canvas */
+        /* v10.0: 預覽版替身位置調整至 Canvas 相同座標 (Y=200, Y=290) */
         .result-avatar {
-            position: absolute; top: 135px; width: 100%; text-align: center; display: block; margin: 0;
+            position: absolute; top: 155px; width: 100%; text-align: center; display: block; margin: 0;
             font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif !important;
             text-shadow: 0 0 10px rgba(0,0,0,0.25);
         }
         #result-head { font-size: 85px; line-height: 85px; display: block; margin-bottom: 5px; } 
         #result-body { font-size: 85px; line-height: 85px; display: block; }
         
-        /* v9.0: 預覽版底部文字向上平移 25px */
+        /* v10.0: 預覽版底部文字向下平移，平衡上下間距 */
         .result-text-box {
-            position: absolute; bottom: 70px; left: 0; width: 100%; text-align: center;
+            position: absolute; bottom: 55px; left: 0; width: 100%; text-align: center;
         }
         .result-text { font-size: 18px; line-height: 1.5; display: block; margin: 0; }
         #result-crime { font-size: 22px; }
         
         .watermark-footer {
-            position: absolute; bottom: 35px; left: 0; width: 100%; text-align: center;
+            position: absolute; bottom: 20px; left: 0; width: 100%; text-align: center;
             color: rgba(0, 0, 0, 0.45); line-height: 1.3;
         }
 
@@ -567,7 +567,7 @@
         }
 
         // =========================================================================
-        // 原生 Canvas API 繪圖核心 (v9.0 完美字體與平衡版)
+        // 原生 Canvas API 繪圖核心 (v10.0 完美字體與平衡版)
         // =========================================================================
         function generateNativeCanvasImage() {
             const loadingText = document.getElementById('loading-overlay');
@@ -630,7 +630,7 @@
                             ctx.restore();
                         });
 
-                        // 4. 繪製虛擬替身 (v9.0: 向上平移 25px 以平衡視覺)
+                        // 4. 繪製虛擬替身 (v10.0: 向下平移至絕對中心點 Y=200, Y=290)
                         ctx.save();
                         ctx.shadowColor = 'rgba(0,0,0,0.2)';
                         ctx.shadowBlur = 10;
@@ -638,13 +638,13 @@
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
                         
-                        // 頭部 Y=180, 身體 Y=270
-                        ctx.fillText(heads[headIdx], width/2, 180);
-                        ctx.fillText(bodies[bodyIdx], width/2, 270);
+                        // 頭部 Y=200, 身體 Y=290 (完美懸浮置中)
+                        ctx.fillText(heads[headIdx], width/2, 200);
+                        ctx.fillText(bodies[bodyIdx], width/2, 290);
                         ctx.restore();
 
-                        // ⚠️ v9.0: 字體產生器改用 bold (700) 並優先使用粉圓體
-                        const fontBase = '"jf-openhuninn-1.1", "M PLUS Rounded 1c", "Noto Sans TC", sans-serif';
+                        // ⚠️ v10.0: 字體產生器改用 Kosugi Maru 優先，解決缺字問題
+                        const fontBase = '"Kosugi Maru", "jf-openhuninn-1.1", "M PLUS Rounded 1c", "Noto Sans TC", sans-serif';
                         const getFont = (size) => `bold ${size}px ${fontBase}`;
 
                         // 建立文字防護光暈
@@ -658,7 +658,7 @@
                             ctx.shadowColor = 'transparent';
                         };
 
-                        // 5. K.O. 標題
+                        // 5. K.O. 標題 (中心點 Y=40)
                         ctx.font = getFont(36);
                         ctx.fillStyle = '#FF2400';
                         ctx.textAlign = 'center';
@@ -680,15 +680,15 @@
                         ctx.textAlign = 'right';
                         ctx.fillText(document.getElementById('game-timer').innerText, statR, 115);
 
-                        // 7. 底部結算文字 (v9.0: 全部向上平移 25px)
+                        // 7. 底部結算文字 (v10.0: 向下平移，與上方對稱)
                         ctx.textAlign = 'center';
                         ctx.fillStyle = '#000';
                         
-                        // 今天不忍了 Y=355
+                        // 今天不忍了 Y=370
                         ctx.font = getFont(18);
-                        ctx.fillText('今天不忍了！', width/2, 355);
+                        ctx.fillText('今天不忍了！', width/2, 370);
 
-                        // 罪狀行 Y=385
+                        // 罪狀行 Y=400
                         const crimePrefix = '成功擊退 ';
                         const crimeName = document.getElementById('result-crime').innerText;
                         ctx.font = getFont(18);
@@ -700,25 +700,25 @@
                         ctx.textAlign = 'left';
                         ctx.font = getFont(18);
                         ctx.fillStyle = '#000';
-                        ctx.fillText(crimePrefix, startX, 385);
+                        ctx.fillText(crimePrefix, startX, 400);
                         ctx.font = getFont(22);
                         ctx.fillStyle = '#FF2400';
-                        ctx.fillText(crimeName, startX + w1, 385);
+                        ctx.fillText(crimeName, startX + w1, 400);
 
-                        // 爽度行 Y=415
+                        // 爽度行 Y=430
                         ctx.textAlign = 'center';
                         ctx.fillStyle = '#000';
                         ctx.font = getFont(18);
-                        ctx.fillText('爽度 100%！', width/2, 415);
+                        ctx.fillText('爽度 100%！', width/2, 430);
 
-                        // 8. 版權宣告 (v9.0: 向上平移 25px)
+                        // 8. 版權宣告 (v10.0: 向下平移，中心點 Y=475)
                         ctx.fillStyle = 'rgba(0,0,0,0.6)';
-                        // 版權 Y=445
+                        // 版權 Y=460
                         ctx.font = getFont(10);
-                        ctx.fillText('© 2026 an App a Day Project.', width/2, 445);
-                        // 警語 Y=460
+                        ctx.fillText('© 2026 an App a Day Project.', width/2, 460);
+                        // 警語 Y=475
                         ctx.font = getFont(8);
-                        ctx.fillText('⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。', width/2, 460);
+                        ctx.fillText('⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。', width/2, 475);
                         clearShadow();
 
                         // 繪製紅框
