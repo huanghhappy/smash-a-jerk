@@ -116,7 +116,7 @@
             pointer-events: none; z-index: 1; opacity: 0.85; overflow: hidden;
         }
         
-        /* 替身區塊：移除 filter，改用安全的 text-shadow */
+        /* 替身區塊 */
         .avatar-display {
             position: relative; display: flex; flex-direction: column; align-items: center;
             font-size: 6.5rem; line-height: 1; user-select: none; transition: transform 0.1s; z-index: 2;
@@ -151,14 +151,15 @@
         #loading-overlay { font-size: 1.2rem; font-weight: bold; color: var(--primary); margin: 15px 0; display: none; animation: pulse 1s infinite;}
 
         /* ==============================================================
-           終極穩定版戰績卡片 (修復 Step 3 高度擠壓 & Step 4 截圖爆炸)
+           終極穩定版戰績卡片
            ============================================================== */
         #result-card {
             background: #fff; color: #000; 
-            padding: 25px 20px 20px 20px; /* 增加底部 Padding 給文字呼吸空間 */
+            padding: 25px 20px 20px 20px;
             border-radius: 20px; margin: 10px 0 20px 0;
             border: 6px solid var(--danger); position: relative; 
-            width: 100%; max-width: 320px; min-height: 480px; /* 加入 min-height 確保高度充足 */
+            width: 100%; max-width: 300px; /* 調整最大寬度以適應手機 */
+            aspect-ratio: 3 / 5; /* 設定 3:5 直式比例 */
             box-sizing: border-box; overflow: hidden; display: block; text-align: center;
         }
         
@@ -174,20 +175,20 @@
 
         .result-title { font-size: 2.2rem; font-weight: 900; color: var(--danger); margin: 0 0 15px 0; display: block; text-shadow: 1px 1px 0 #fff;}
         
-        /* 穩定的數據排版 */
         .result-stats-container {
             width: 150px; margin: 0 auto 15px auto; color: #555; font-weight: 700; font-size: 1.05rem; text-align: left;
         }
         .result-stat-line { margin-bottom: 5px; display: block; overflow: hidden; }
         .result-stat-val { float: right; color: #555; }
 
-        /* 替身區塊 (修復: 使用 text-shadow 取代 filter 防止截圖當機) */
+        /* 替身區塊 (縮小比例且不重疊) */
         .result-avatar {
-            font-size: 7rem; line-height: 1; display: block; margin: 10px auto;
+            font-size: 5rem; /* 縮小尺寸 */
+            line-height: 1; display: block; margin: 15px auto; /* 增加上下間距 */
             font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif !important;
             text-shadow: 0 0 10px rgba(0,0,0,0.3);
         }
-        #result-head { display: block; margin-bottom: -15px; }
+        #result-head { display: block; margin-bottom: -10px; /* 調整頭部與身體間距 */ }
         #result-body { display: block; }
         
         .result-text { font-size: 1.3rem; font-weight: 900; line-height: 1.5; margin: 20px 0 0 0; display: block; }
@@ -197,8 +198,8 @@
             color: rgba(0, 0, 0, 0.45); font-weight: 700; line-height: 1.3;
         }
 
-        #final-image-container { width: 100%; max-width: 320px; display: none; margin: 0 auto 15px auto; }
-        #final-image-container img { width: 100%; border-radius: 20px; box-shadow: 0 0 20px rgba(255,0,0,0.5); display: block;}
+        #final-image-container { width: 100%; max-width: 300px; display: none; margin: 0 auto 15px auto; }
+        #final-image-container img { width: 100%; border-radius: 20px; box-shadow: 0 0 20px rgba(255,0,0,0.5); display: block; aspect-ratio: 3 / 5; } /* 最終圖片也保持 3:5 */
 
         .footer-info {
             margin-top: auto; padding: 10px 0; text-align: center; width: 100%;
@@ -472,7 +473,6 @@
             mark.style.top = `${10 + Math.random() * 80}%`;
             mark.style.fontSize = `${28 + Math.random() * 12}px`;
             mark.style.fontFamily = "'Apple Color Emoji', 'Segoe UI Emoji', sans-serif";
-            // 使用安全的旋轉寫法
             mark.style.transform = `rotate(${Math.random() * 360}deg)`; 
             dmgLayer.appendChild(mark);
         }
@@ -506,11 +506,9 @@
                 document.body.classList.remove('shake-hard');
                 document.getElementById('arena-screen').style.display = 'none';
                 
-                // 【核心修復】：強制塞入「初始臉」，不抓取骷髏頭
                 document.getElementById('result-head').innerText = heads[headIdx];
                 document.getElementById('result-body').innerText = bodies[bodyIdx];
                 
-                // 複製戰損圖層
                 document.getElementById('result-damage-layer').innerHTML = document.getElementById('damage-layer').innerHTML;
                 
                 document.getElementById('result-screen').style.display = 'flex';
@@ -572,10 +570,10 @@
 
             document.fonts.ready.then(() => {
                 setTimeout(() => {
-                    // 加入 onclone 魔法陣，強制鎖定截圖瞬間的 CSS 排版，防止破圖
                     html2canvas(targetCard, {
-                        scale: 2, 
+                        scale: 1.5, 
                         useCORS: true,
+                        allowTaint: true,
                         backgroundColor: null,
                         onclone: function(clonedDoc) {
                             let clonedCard = clonedDoc.getElementById('result-card');
