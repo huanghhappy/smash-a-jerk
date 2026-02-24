@@ -5,19 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>小人退散：今天不忍了！</title>
     
-    <link href="https://cdn.jsdelivr.net/npm/jf-openhuninn@1.1.1/jf-openhuninn-1.1.min.css" rel="stylesheet" crossorigin="anonymous">
-    
-    <meta name="description" content="超舒壓互動神器！自訂你的出氣包，把平時受的氣全部發洩出來！">
-    <meta property="og:title" content="小人退散：今天不忍了！">
-    <meta property="og:description" content="我正在教訓小人，點擊連結一起加入洩憤行列！以牙還牙，加倍奉還！">
-    <meta property="og:image" content="social.png">
-    
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="logo.png">
-    <link rel="icon" type="image/png" href="logo.png">
-
     <style>
+        @font-face {
+            font-family: 'GenSenRounded';
+            src: url('500.otf') format('opentype');
+            font-weight: 500;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'GenSenRounded';
+            src: url('700.otf') format('opentype');
+            font-weight: 700;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'GenSenRounded';
+            src: url('900.otf') format('opentype');
+            font-weight: 900;
+            font-display: swap;
+        }
+
         :root {
             --bg-color: #1a1a1a;
             --primary: #FFD700; 
@@ -28,9 +35,9 @@
         
         body {
             margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-light);
-            /* Apple 原生冬青圓體優先 -> 粉圓體備用。絕對不使用 bold 防止 iOS 暴走 */
-            font-family: 'Hiragino Maru Gothic ProN', 'jf-openhuninn-1.1', sans-serif !important;
-            font-weight: normal; 
+            /* 全站唯一指定你的源泉圓體，徹底解決跨平台跑版問題 */
+            font-family: 'GenSenRounded', sans-serif !important;
+            font-weight: 700; /* 預設使用 700 粗體 */
             overflow: hidden; display: flex; flex-direction: column;
             align-items: center; justify-content: flex-start; height: 100vh;
             touch-action: manipulation;
@@ -39,7 +46,6 @@
         /* 強制所有輸入框和按鈕繼承圓體 */
         input, select, button {
             font-family: inherit !important;
-            font-weight: normal !important;
         }
 
         @keyframes shake {
@@ -63,26 +69,24 @@
             color: var(--primary); 
             font-size: clamp(1.5rem, 6.5vw, 2.2rem); 
             white-space: nowrap; text-shadow: 2px 2px 0px var(--danger); 
-            margin: 0; line-height: 1.2;
-            -webkit-text-stroke: 1px var(--primary); 
+            margin: 0; line-height: 1.2; font-weight: 900; /* 大標題使用 900 特粗體 */
         }
-        .subtitle { color: var(--danger); font-size: 1.3rem; margin-top: 5px; -webkit-text-stroke: 0.5px var(--danger); }
-        h2 { font-size: 1.2rem; margin: 10px 0; color: #fff; -webkit-text-stroke: 0.5px #fff;}
+        .subtitle { color: var(--danger); font-size: 1.3rem; margin-top: 5px; font-weight: 900; }
+        h2 { font-size: 1.2rem; margin: 10px 0; color: #fff; font-weight: 700; }
         
         .input-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 15px; }
-        
-        /* 修復：移除 -webkit-text-stroke 讓輸入框文字變回實心 */
         .ui-element {
             width: 100%; max-width: 320px; box-sizing: border-box;
-            padding: 12px; font-size: 1.1rem;
+            padding: 12px; font-size: 1.1rem; font-weight: 700;
             border-radius: 12px; text-align: center; outline: none;
+            /* 已移除 text-stroke，確保輸入框文字實心清晰 */
         }
         input, select { background: #333; border: 2px solid var(--primary); color: white; appearance: none; }
         
         button.btn-primary {
             background-color: var(--danger); color: white; border: none;
             padding: 15px 0; font-size: 1.3rem; margin-top: 5px; cursor: pointer;
-            box-shadow: 0 4px 0 #8b0000; transition: 0.1s; -webkit-text-stroke: 0.5px white;
+            box-shadow: 0 4px 0 #8b0000; transition: 0.1s; font-weight: 900;
         }
         button.btn-primary:active { transform: translateY(4px); box-shadow: 0 0 0 #8b0000; }
 
@@ -97,12 +101,12 @@
             border-radius: 10px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
         }
         .preview-emoji { font-size: 3.5rem; line-height: 1; width: 80px; text-align: center;}
-        .part-label { font-size: 0.9rem; color: #aaa; -webkit-text-stroke: 0px;}
+        .part-label { font-size: 0.9rem; color: #aaa; font-weight: 700; }
 
-        .top-info { width: 100%; display: flex; justify-content: space-between; font-size: 0.95rem; color: #aaa; margin-top: 5px; align-items: flex-start; -webkit-text-stroke: 0.3px #aaa;}
-        .top-stats-box { display: flex; flex-direction: column; align-items: flex-end; width: 120px; -webkit-text-stroke: 0.3px #fff;}
+        .top-info { width: 100%; display: flex; justify-content: space-between; font-size: 0.95rem; color: #aaa; margin-top: 5px; align-items: flex-start; font-weight: 700; }
+        .top-stats-box { display: flex; flex-direction: column; align-items: flex-end; width: 120px; }
         
-        .status-area { width: 100%; max-width: 320px; text-align: left; margin-top: 10px; -webkit-text-stroke: 0.3px #fff;}
+        .status-area { width: 100%; max-width: 320px; text-align: left; margin-top: 10px; font-weight: 700; }
         .bar-container { background: #333; height: 18px; border-radius: 10px; margin-bottom: 8px; overflow: hidden; border: 2px solid #555;}
         #hp-bar { background: #00FF00; height: 100%; width: 100%; transition: width 0.2s, background 0.5s; }
         #rage-bar { background: var(--primary); height: 100%; width: 0%; transition: width 0.2s;}
@@ -131,36 +135,34 @@
         .weapon-rack { width: 100%; max-width: 320px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding-bottom: 10px; }
         .weapon-btn {
             background: #2a2a2a; border: 2px solid #555; color: white; padding: 10px 0;
-            border-radius: 12px; font-size: 1.1rem; cursor: pointer; -webkit-text-stroke: 0.5px white;
+            border-radius: 12px; font-size: 1.1rem; cursor: pointer; font-weight: 700;
         }
         .weapon-btn:active { background: #444; border-color: var(--primary); }
         
         #ultimate-btn {
             grid-column: span 2; background: #555; border: 2px solid #333; color: #888;
             padding: 12px; font-size: 1.2rem; border-radius: 12px; transition: all 0.3s;
-            -webkit-text-stroke: 0.5px #888; 
+            font-weight: 900; /* 大招按鈕使用 900 特粗體 */
         }
         #ultimate-btn.ready {
             background: var(--danger); border-color: var(--primary); color: white;
             box-shadow: 0 0 15px var(--danger); animation: pulse 1s infinite; cursor: pointer;
-            -webkit-text-stroke: 1px white; 
         }
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-        /* 修復：明確宣告 damage-text 的字體，確保攻擊特效字體一致 */
         .damage-text {
             position: absolute; color: white; font-size: 2rem;
-            font-family: 'Hiragino Maru Gothic ProN', 'jf-openhuninn-1.1', sans-serif !important;
+            font-weight: 900; /* 攻擊文字使用 900 特粗體 */
             text-shadow: 2px 2px 0 #000; pointer-events: none; z-index: 10;
-            animation: floatUp 0.8s ease-out forwards; -webkit-text-stroke: 0.5px white;
+            animation: floatUp 0.8s ease-out forwards;
         }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-50px) scale(1.5); } }
 
-        #loading-overlay { font-size: 1.2rem; color: var(--primary); margin: 15px 0; display: none; animation: pulse 1s infinite; -webkit-text-stroke: 0.5px var(--primary);}
+        #loading-overlay { font-size: 1.2rem; color: var(--primary); margin: 15px 0; display: none; animation: pulse 1s infinite; font-weight: 900;}
 
         /* ==============================================================
-           視覺預覽版戰績卡片 
+           視覺預覽版戰績卡片 (完全回歸 v10 完美排版)
            ============================================================== */
         #result-card {
             background: #fff; color: #000; padding: 0;
@@ -183,34 +185,35 @@
         .result-title { 
             position: absolute; top: 20px; width: 100%; text-align: center;
             font-size: 34px; color: var(--danger); display: block; 
-            text-shadow: 1px 1px 0 #fff; margin: 0; -webkit-text-stroke: 1px var(--danger);
+            text-shadow: 1px 1px 0 #fff; margin: 0; font-weight: 900;
         }
         
         .result-stats-container {
             position: absolute; top: 75px; left: 50%; transform: translateX(-50%);
-            width: 120px; color: #555; font-size: 15px; text-align: left; display: block; margin: 0; -webkit-text-stroke: 0.5px #555;
+            width: 120px; color: #555; font-size: 15px; text-align: left; display: block; margin: 0; font-weight: 700;
         }
         .result-stat-line { position: relative; height: 20px; display: block; }
         .result-stat-val { position: absolute; right: 0; top: 0; color: #555; }
 
+        /* v10 完美替身懸浮座標 */
         .result-avatar {
-            position: absolute; top: 165px; width: 100%; text-align: center; display: block; margin: 0;
+            position: absolute; top: 155px; width: 100%; text-align: center; display: block; margin: 0;
             font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif !important;
             text-shadow: 0 0 10px rgba(0,0,0,0.25);
         }
         #result-head { font-size: 85px; line-height: 85px; display: block; margin-bottom: 5px; } 
         #result-body { font-size: 85px; line-height: 85px; display: block; }
         
+        /* v10 底部文字座標 */
         .result-text-box {
             position: absolute; bottom: 55px; left: 0; width: 100%; text-align: center;
         }
-        .result-text { font-size: 18px; line-height: 1.5; display: block; margin: 0; -webkit-text-stroke: 0.5px #000; }
-        #result-crime { font-size: 22px; color: var(--danger); -webkit-text-stroke: 0.8px var(--danger); }
+        .result-text { font-size: 18px; line-height: 1.5; display: block; margin: 0; font-weight: 900;}
+        #result-crime { font-size: 22px; color: var(--danger); font-weight: 900; }
         
-        /* 修復：預覽版版權變灰且移除 stroke */
         .watermark-footer {
             position: absolute; bottom: 15px; left: 0; width: 100%; text-align: center;
-            color: #888; line-height: 1.3; -webkit-text-stroke: 0px;
+            color: #888888; line-height: 1.3; font-weight: 500; /* 改為低調灰色 500 粗細 */
         }
 
         #final-image-container { width: 100%; max-width: 300px; display: none; margin: 0 auto 15px auto; }
@@ -221,7 +224,7 @@
             display: flex; flex-direction: column; gap: 4px;
         }
         .footer-info div {
-            font-size: clamp(0.6rem, 3vw, 0.8rem); color: #888;
+            font-size: clamp(0.6rem, 3vw, 0.8rem); color: #888; font-weight: 500;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
     </style>
@@ -581,7 +584,7 @@
         }
 
         // =========================================================================
-        // 原生 Canvas API 繪圖核心 (最終精修：降描邊厚度、版權變灰)
+        // 原生 Canvas API 繪圖核心 (掛載真實源泉圓體，拔除描邊特效！)
         // =========================================================================
         function generateNativeCanvasImage() {
             const loadingText = document.getElementById('loading-overlay');
@@ -641,6 +644,7 @@
                             ctx.restore();
                         });
 
+                        // 4. 繪製虛擬替身 (退回 v10 完美置中座標 Y=200, Y=290)
                         ctx.save();
                         ctx.shadowColor = 'rgba(0,0,0,0.2)';
                         ctx.shadowBlur = 10;
@@ -648,69 +652,62 @@
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
                         
-                        ctx.fillText(heads[headIdx], width/2, 210);
-                        ctx.fillText(bodies[bodyIdx], width/2, 300);
+                        ctx.fillText(heads[headIdx], width/2, 200);
+                        ctx.fillText(bodies[bodyIdx], width/2, 290);
                         ctx.restore();
 
-                        // ⚠️ 終極修復字體：Apple原生圓體優先，確保不缺字。絕對使用 normal 狀態！
-                        const fontBase = '"Hiragino Maru Gothic ProN", "jf-openhuninn-1.1", sans-serif';
-                        
-                        // 乾淨的繪圖筆刷，修復：下調加粗厚度 (0.025)，讓複雜文字(擊/鍋)粒粒分明
-                        function drawThickCuteText(text, x, y, size, color, align = 'center', noStroke = false) {
-                            ctx.font = `normal ${size}px ${fontBase}`;
+                        // ⚠️ 終極字體畫筆：直接調用真實存在的 500, 700, 900 字重！不再需要描邊作弊
+                        function drawPerfectText(text, x, y, size, color, weight = '700', align = 'center', noShadow = false) {
+                            // 使用匯入的 GenSenRounded
+                            ctx.font = `${weight} ${size}px "GenSenRounded", sans-serif`;
                             ctx.textAlign = align;
                             ctx.textBaseline = 'middle';
                             
-                            if (!noStroke) {
+                            if (!noShadow) {
                                 ctx.shadowColor = 'rgba(255, 255, 255, 1)';
-                                ctx.shadowBlur = 10;
+                                ctx.shadowBlur = 8;
                                 ctx.fillStyle = color;
                                 ctx.fillText(text, x, y);
-                                ctx.fillText(text, x, y); 
-                                
-                                ctx.shadowColor = 'transparent'; 
-                                
-                                ctx.lineJoin = 'round'; 
-                                ctx.lineWidth = size * 0.025; // ★ 修復：將原本的 0.05 降為 0.025，解決文字糊成一團的問題
-                                ctx.strokeStyle = color;
-                                ctx.strokeText(text, x, y);
+                                ctx.fillText(text, x, y); // 雙重填充增強光暈
+                                ctx.shadowColor = 'transparent'; // 畫完重置
+                            } else {
+                                ctx.fillStyle = color;
+                                ctx.fillText(text, x, y);
                             }
-                            
-                            ctx.fillStyle = color;
-                            ctx.fillText(text, x, y);
                         }
 
-                        // 5. K.O. 標題
-                        drawThickCuteText('K.O. 擊倒', width/2, 40, 36, '#FF2400');
+                        // 5. K.O. 標題 (Y=40，使用 900 特粗)
+                        drawPerfectText('K.O. 擊倒', width/2, 40, 36, '#FF2400', '900');
 
-                        // 6. 數據列
+                        // 6. 數據列 (Y=90, 115，使用 700 粗體)
                         const statL = 90;
                         const statR = 210;
-                        drawThickCuteText('行刑次數', statL, 90, 15, '#555', 'left');
-                        drawThickCuteText(`${hitCount} 次`, statR, 90, 15, '#555', 'right');
-                        drawThickCuteText('行刑時間', statL, 115, 15, '#555', 'left');
-                        drawThickCuteText(document.getElementById('game-timer').innerText, statR, 115, 15, '#555', 'right');
+                        drawPerfectText('行刑次數', statL, 90, 15, '#555', '700', 'left');
+                        drawPerfectText(`${hitCount} 次`, statR, 90, 15, '#555', '700', 'right');
+                        drawPerfectText('行刑時間', statL, 115, 15, '#555', '700', 'left');
+                        drawPerfectText(document.getElementById('game-timer').innerText, statR, 115, 15, '#555', '700', 'right');
 
-                        // 7. 底部結算文字
-                        drawThickCuteText('今天不忍了！', width/2, 390, 18, '#000');
+                        // 7. 底部結算文字 (Y=370, 400, 430，使用 900 特粗)
+                        drawPerfectText('今天不忍了！', width/2, 370, 18, '#000', '900');
 
+                        // 雙色文字繪製邏輯
                         const crimePrefix = '成功擊退 ';
                         const crimeName = document.getElementById('result-crime').innerText;
                         
-                        ctx.font = `normal 18px ${fontBase}`;
+                        ctx.font = `900 18px "GenSenRounded", sans-serif`;
                         const w1 = ctx.measureText(crimePrefix).width;
-                        ctx.font = `normal 22px ${fontBase}`;
+                        ctx.font = `900 22px "GenSenRounded", sans-serif`;
                         const w2 = ctx.measureText(crimeName).width;
                         const startX = width/2 - (w1 + w2)/2;
                         
-                        drawThickCuteText(crimePrefix, startX, 420, 18, '#000', 'left');
-                        drawThickCuteText(crimeName, startX + w1, 420, 22, '#FF2400', 'left');
+                        drawPerfectText(crimePrefix, startX, 400, 18, '#000', '900', 'left');
+                        drawPerfectText(crimeName, startX + w1, 400, 22, '#FF2400', '900', 'left');
 
-                        drawThickCuteText('爽度 100%！', width/2, 450, 18, '#000');
+                        drawPerfectText('爽度 100%！', width/2, 430, 18, '#000', '900');
 
-                        // 8. 版權宣告 (修復：改為灰色 #888888 且無描邊 noStroke=true，不喧賓奪主)
-                        drawThickCuteText('© 2026 an App a Day Project.', width/2, 475, 10, '#888888', 'center', true);
-                        drawThickCuteText('⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。', width/2, 490, 8, '#888888', 'center', true);
+                        // 8. 版權宣告 (Y=460, 475，使用 500 中等粗細、灰色、無光暈)
+                        drawPerfectText('© 2026 an App a Day Project.', width/2, 460, 10, '#888888', '500', 'center', true);
+                        drawPerfectText('⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。', width/2, 475, 8, '#888888', '500', 'center', true);
 
                         // 繪製紅框
                         ctx.lineWidth = 12; 
