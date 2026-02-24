@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>小人退散：今天不忍了！</title>
     
-    <link href="https://cdn.jsdelivr.net/npm/jf-openhuninn@1.1.1/jf-openhuninn-1.1.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/jf-openhuninn@1.1.1/jf-openhuninn-1.1.min.css" rel="stylesheet" crossorigin="anonymous">
     
     <meta name="description" content="超舒壓互動神器！自訂你的出氣包，把平時受的氣全部發洩出來！">
     <meta property="og:title" content="小人退散：今天不忍了！">
@@ -28,8 +28,8 @@
         
         body {
             margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-light);
-            /* ⚠️ 終極修復：強制使用粉圓體，且【絕對不可】設定 font-weight: bold，否則 iOS 會跳回方形字體 */
-            font-family: 'jf-openhuninn-1.1', sans-serif !important;
+            /* ⚠️ 終極字體防護網：粉圓體優先 -> Apple 內建頂級圓體 -> 系統圓體。且絕對不使用 bold，防止 iOS 切回方角黑體 */
+            font-family: 'jf-openhuninn-1.1', 'Hiragino Maru Gothic ProN', 'SF Pro Rounded', ui-rounded, sans-serif !important;
             font-weight: normal; 
             overflow: hidden; display: flex; flex-direction: column;
             align-items: center; justify-content: flex-start; height: 100vh;
@@ -58,7 +58,7 @@
             font-size: clamp(1.5rem, 6.5vw, 2.2rem); 
             white-space: nowrap; text-shadow: 2px 2px 0px var(--danger); 
             margin: 0; line-height: 1.2;
-            -webkit-text-stroke: 0.5px var(--primary); /* 用微小的描邊增加份量感，不破壞字體 */
+            -webkit-text-stroke: 0.5px var(--primary); /* 微加粗，不破壞圓體結構 */
         }
         .subtitle { color: var(--danger); font-size: 1.3rem; margin-top: 5px; -webkit-text-stroke: 0.5px var(--danger); }
         h2 { font-size: 1.2rem; margin: 10px 0; color: #fff; }
@@ -78,7 +78,6 @@
         }
         button.btn-primary:active { transform: translateY(4px); box-shadow: 0 0 0 #8b0000; }
 
-        /* --- 人物設計器 --- */
         .avatar-builder {
             width: 100%; max-width: 320px; background: var(--panel-bg); 
             padding: 15px; border-radius: 15px; margin-bottom: 15px; box-sizing: border-box;
@@ -92,7 +91,6 @@
         .preview-emoji { font-size: 3.5rem; line-height: 1; width: 80px; text-align: center;}
         .part-label { font-size: 0.9rem; color: #aaa; }
 
-        /* --- 行刑場介面 --- */
         .top-info { width: 100%; display: flex; justify-content: space-between; font-size: 0.95rem; color: #aaa; margin-top: 5px; align-items: flex-start;}
         .top-stats-box { display: flex; flex-direction: column; align-items: flex-end; width: 120px;}
         
@@ -136,7 +134,7 @@
         #ultimate-btn.ready {
             background: var(--danger); border-color: var(--primary); color: white;
             box-shadow: 0 0 15px var(--danger); animation: pulse 1s infinite; cursor: pointer;
-            -webkit-text-stroke: 0.5px white; /* 讓業力引爆按鈕的字看起來更有份量 */
+            -webkit-text-stroke: 0.5px white; /* 讓按鈕的字體實心且厚實 */
         }
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
@@ -150,7 +148,7 @@
 
         #loading-overlay { font-size: 1.2rem; color: var(--primary); margin: 15px 0; display: none; animation: pulse 1s infinite;}
 
-        /* --- 視覺預覽版戰績卡片 (配合 Canvas v10 完美座標) --- */
+        /* --- 視覺預覽版戰績卡片 (完美置中佈局) --- */
         #result-card {
             background: #fff; color: #000; padding: 0;
             border-radius: 20px; margin: 10px auto 20px auto;
@@ -169,36 +167,37 @@
 
         .result-content-wrapper { position: relative; z-index: 3; display: block; width: 100%; height: 100%; }
 
+        /* 上方文字 */
         .result-title { 
             position: absolute; top: 20px; width: 100%; text-align: center;
             font-size: 34px; color: var(--danger); display: block; 
-            text-shadow: 1px 1px 0 #fff; margin: 0;
-            -webkit-text-stroke: 0.5px var(--danger);
+            text-shadow: 1px 1px 0 #fff; margin: 0; -webkit-text-stroke: 0.5px var(--danger);
         }
-        
         .result-stats-container {
             position: absolute; top: 75px; left: 50%; transform: translateX(-50%);
-            width: 120px; color: #555; font-size: 15px; text-align: left; display: block; margin: 0;
+            width: 120px; color: #555; font-size: 15px; text-align: left; display: block; margin: 0; -webkit-text-stroke: 0.2px #555;
         }
         .result-stat-line { position: relative; height: 20px; display: block; }
         .result-stat-val { position: absolute; right: 0; top: 0; color: #555; }
 
+        /* 替身：絕對置中 */
         .result-avatar {
-            position: absolute; top: 155px; width: 100%; text-align: center; display: block; margin: 0;
+            position: absolute; top: 165px; width: 100%; text-align: center; display: block; margin: 0;
             font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif !important;
             text-shadow: 0 0 10px rgba(0,0,0,0.25);
         }
         #result-head { font-size: 85px; line-height: 85px; display: block; margin-bottom: 5px; } 
         #result-body { font-size: 85px; line-height: 85px; display: block; }
         
+        /* 下方文字：整體向下平移，留出呼吸空間 */
         .result-text-box {
-            position: absolute; bottom: 55px; left: 0; width: 100%; text-align: center;
+            position: absolute; bottom: 65px; left: 0; width: 100%; text-align: center;
         }
         .result-text { font-size: 18px; line-height: 1.5; display: block; margin: 0; -webkit-text-stroke: 0.2px #000; }
         #result-crime { font-size: 22px; color: var(--danger); -webkit-text-stroke: 0.5px var(--danger); }
         
         .watermark-footer {
-            position: absolute; bottom: 20px; left: 0; width: 100%; text-align: center;
+            position: absolute; bottom: 15px; left: 0; width: 100%; text-align: center;
             color: rgba(0, 0, 0, 0.45); line-height: 1.3;
         }
 
@@ -570,7 +569,7 @@
         }
 
         // =========================================================================
-        // 畫布引擎 v12.0：嚴格綁定 normal weight 粉圓體，完美防護光暈
+        // 原生 Canvas API 繪圖核心 (v12.0 終極修復：解開字體封印，完美數學置中)
         // =========================================================================
         function generateNativeCanvasImage() {
             const loadingText = document.getElementById('loading-overlay');
@@ -630,7 +629,7 @@
                             ctx.restore();
                         });
 
-                        // 4. 繪製虛擬替身 (垂直置中懸浮於 Y=245)
+                        // 4. 繪製虛擬替身 (垂直置中：完美懸浮於上下區塊正中間 Y=255)
                         ctx.save();
                         ctx.shadowColor = 'rgba(0,0,0,0.2)';
                         ctx.shadowBlur = 10;
@@ -638,16 +637,16 @@
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
                         
-                        // 頭部 Y=200, 身體 Y=290
-                        ctx.fillText(heads[headIdx], width/2, 200);
-                        ctx.fillText(bodies[bodyIdx], width/2, 290);
+                        // 頭部 Y=210, 身體 Y=300
+                        ctx.fillText(heads[headIdx], width/2, 210);
+                        ctx.fillText(bodies[bodyIdx], width/2, 300);
                         ctx.restore();
 
-                        // ⚠️ 終極修復字體：強制使用 normal，絕對不可使用 bold，讓粉圓體自然發揮
-                        const fontBase = '"jf-openhuninn-1.1", sans-serif';
+                        // ⚠️ 終極修復字體：嚴格綁定 normal！依賴字體原生設計，絕對不使用 bold，防止空心與方塊字
+                        const fontBase = '"jf-openhuninn-1.1", "Hiragino Maru Gothic ProN", "SF Pro Rounded", sans-serif';
                         
-                        // 建立自訂畫筆：利用重複繪製與強烈光暈，讓 normal 字體看起來飽滿清晰，且絕對不缺字
-                        function drawCuteText(text, x, y, size, color, align = 'center') {
+                        // 建立自訂畫筆：先描邊微加粗，再填滿實心，最後上發光光暈。解決空心字問題！
+                        function drawPerfectText(text, x, y, size, color, align = 'center') {
                             ctx.font = `normal ${size}px ${fontBase}`;
                             ctx.textAlign = align;
                             ctx.textBaseline = 'middle';
@@ -655,30 +654,32 @@
                             // 高濃度白色防護光暈
                             ctx.shadowColor = 'rgba(255, 255, 255, 1)';
                             ctx.shadowBlur = 8;
-                            ctx.shadowOffsetX = 0;
-                            ctx.shadowOffsetY = 0;
                             
+                            // 第一步：描邊微加粗 (解決字體太細的問題，且絕對不會空心)
+                            ctx.lineWidth = size * 0.04; 
+                            ctx.strokeStyle = color;
+                            ctx.strokeText(text, x, y);
+                            
+                            // 第二步：填滿實心 (覆蓋在描邊之上，確保字體飽滿)
                             ctx.fillStyle = color;
-                            // 重複填滿兩次，增加文字厚實感與光暈不透明度，完全捨棄 strokeText
-                            ctx.fillText(text, x, y);
                             ctx.fillText(text, x, y);
                             
                             ctx.shadowColor = 'transparent'; // 畫完重置
                         }
 
-                        // 5. K.O. 標題 (中心點 Y=40)
-                        drawCuteText('K.O. 擊倒', width/2, 40, 36, '#FF2400');
+                        // 5. K.O. 標題 (中心點 Y=40，與下方警語對稱)
+                        drawPerfectText('K.O. 擊倒', width/2, 40, 36, '#FF2400');
 
                         // 6. 數據列 (Y=90, 115)
                         const statL = 90;
                         const statR = 210;
-                        drawCuteText('行刑次數', statL, 90, 15, '#555', 'left');
-                        drawCuteText(`${hitCount} 次`, statR, 90, 15, '#555', 'right');
-                        drawCuteText('行刑時間', statL, 115, 15, '#555', 'left');
-                        drawCuteText(document.getElementById('game-timer').innerText, statR, 115, 15, '#555', 'right');
+                        drawPerfectText('行刑次數', statL, 90, 15, '#555', 'left');
+                        drawPerfectText(`${hitCount} 次`, statR, 90, 15, '#555', 'right');
+                        drawPerfectText('行刑時間', statL, 115, 15, '#555', 'left');
+                        drawPerfectText(document.getElementById('game-timer').innerText, statR, 115, 15, '#555', 'right');
 
-                        // 7. 底部結算文字 (Y=370, 400, 430)
-                        drawCuteText('今天不忍了！', width/2, 370, 18, '#000');
+                        // 7. 底部結算文字 (精準向下平移，留出呼吸空間)
+                        drawPerfectText('今天不忍了！', width/2, 390, 18, '#000');
 
                         // 雙色文字繪製邏輯
                         const crimePrefix = '成功擊退 ';
@@ -690,14 +691,14 @@
                         const w2 = ctx.measureText(crimeName).width;
                         const startX = width/2 - (w1 + w2)/2;
                         
-                        drawCuteText(crimePrefix, startX, 400, 18, '#000', 'left');
-                        drawCuteText(crimeName, startX + w1, 400, 22, '#FF2400', 'left');
+                        drawPerfectText(crimePrefix, startX, 420, 18, '#000', 'left');
+                        drawPerfectText(crimeName, startX + w1, 420, 22, '#FF2400', 'left');
 
-                        drawCuteText('爽度 100%！', width/2, 430, 18, '#000');
+                        drawPerfectText('爽度 100%！', width/2, 450, 18, '#000');
 
-                        // 8. 版權宣告 (Y=460, 475)
-                        drawCuteText('© 2026 an App a Day Project.', width/2, 460, 10, 'rgba(0,0,0,0.6)');
-                        drawCuteText('⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。', width/2, 475, 8, 'rgba(0,0,0,0.6)');
+                        // 8. 版權宣告 (Y=475, 490，與上方 KO 對稱)
+                        drawPerfectText('© 2026 an App a Day Project.', width/2, 475, 10, 'rgba(0,0,0,0.6)');
+                        drawPerfectText('⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。', width/2, 490, 8, 'rgba(0,0,0,0.6)');
 
                         // 繪製紅框
                         ctx.lineWidth = 12; 
