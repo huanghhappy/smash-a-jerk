@@ -35,15 +35,14 @@
         
         body {
             margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-light);
-            /* 全站唯一指定你的源泉圓體，徹底解決跨平台跑版問題 */
+            /* 全站唯一指定源泉圓體，徹底解決跨平台跑版問題 */
             font-family: 'GenSenRounded', sans-serif !important;
-            font-weight: 700; /* 預設使用 700 粗體 */
+            font-weight: 700; 
             overflow: hidden; display: flex; flex-direction: column;
             align-items: center; justify-content: flex-start; height: 100vh;
             touch-action: manipulation;
         }
 
-        /* 強制所有輸入框和按鈕繼承圓體 */
         input, select, button {
             font-family: inherit !important;
         }
@@ -64,35 +63,43 @@
             overflow-y: auto; align-items: center;
         }
 
-        .title-group { margin-bottom: 15px; width: 100%; }
+        /* ⚠️ 祭壇介面排版優化區 ⚠️ */
+        .title-group { margin-bottom: 30px; width: 100%; } /* 加大標題與下方輸入框的距離 */
         h1 { 
             color: var(--primary); 
             font-size: clamp(1.5rem, 6.5vw, 2.2rem); 
             white-space: nowrap; text-shadow: 2px 2px 0px var(--danger); 
-            margin: 0; line-height: 1.2; font-weight: 900; /* 大標題使用 900 特粗體 */
+            margin: 0; line-height: 1.2; font-weight: 900; 
         }
-        .subtitle { color: var(--danger); font-size: 1.3rem; margin-top: 5px; font-weight: 900; }
-        h2 { font-size: 1.2rem; margin: 10px 0; color: #fff; font-weight: 700; }
+        .subtitle { color: var(--danger); font-size: 1.3rem; margin-top: 8px; font-weight: 900; }
         
-        .input-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 15px; }
+        /* 獨立「設計虛擬替身」標題，增加上下呼吸空間 */
+        h2 { font-size: 1.25rem; margin: 25px 0 15px 0; color: #fff; font-weight: 700; }
+        
+        /* 加大各個輸入框、選單之間的垂直距離 */
+        .input-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 22px; }
+        
         .ui-element {
             width: 100%; max-width: 320px; box-sizing: border-box;
             padding: 12px; font-size: 1.1rem; font-weight: 700;
             border-radius: 12px; text-align: center; outline: none;
-            /* 已移除 text-stroke，確保輸入框文字實心清晰 */
         }
         input, select { background: #333; border: 2px solid var(--primary); color: white; appearance: none; }
         
         button.btn-primary {
             background-color: var(--danger); color: white; border: none;
-            padding: 15px 0; font-size: 1.3rem; margin-top: 5px; cursor: pointer;
+            padding: 15px 0; font-size: 1.3rem; 
+            margin-top: 15px; /* 加大主按鈕與上方場景選單的距離 */
+            cursor: pointer;
             box-shadow: 0 4px 0 #8b0000; transition: 0.1s; font-weight: 900;
         }
         button.btn-primary:active { transform: translateY(4px); box-shadow: 0 0 0 #8b0000; }
 
         .avatar-builder {
             width: 100%; max-width: 320px; background: var(--panel-bg); 
-            padding: 15px; border-radius: 15px; margin-bottom: 15px; box-sizing: border-box;
+            padding: 15px; border-radius: 15px; 
+            margin-bottom: 25px; /* 加大人物設計器與下方場景選單的距離 */
+            box-sizing: border-box;
             display: flex; flex-direction: column; gap: 10px;
         }
         .avatar-row { display: flex; justify-content: space-between; align-items: center; }
@@ -102,7 +109,9 @@
         }
         .preview-emoji { font-size: 3.5rem; line-height: 1; width: 80px; text-align: center;}
         .part-label { font-size: 0.9rem; color: #aaa; font-weight: 700; }
+        /* ⚠️ 祭壇排版優化結束 ⚠️ */
 
+        /* --- 以下為行刑場與戰績圖 CSS，100% 保持完美原狀 --- */
         .top-info { width: 100%; display: flex; justify-content: space-between; font-size: 0.95rem; color: #aaa; margin-top: 5px; align-items: flex-start; font-weight: 700; }
         .top-stats-box { display: flex; flex-direction: column; align-items: flex-end; width: 120px; }
         
@@ -142,7 +151,7 @@
         #ultimate-btn {
             grid-column: span 2; background: #555; border: 2px solid #333; color: #888;
             padding: 12px; font-size: 1.2rem; border-radius: 12px; transition: all 0.3s;
-            font-weight: 900; /* 大招按鈕使用 900 特粗體 */
+            font-weight: 900; 
         }
         #ultimate-btn.ready {
             background: var(--danger); border-color: var(--primary); color: white;
@@ -153,7 +162,7 @@
 
         .damage-text {
             position: absolute; color: white; font-size: 2rem;
-            font-weight: 900; /* 攻擊文字使用 900 特粗體 */
+            font-weight: 900; 
             text-shadow: 2px 2px 0 #000; pointer-events: none; z-index: 10;
             animation: floatUp 0.8s ease-out forwards;
         }
@@ -161,9 +170,7 @@
 
         #loading-overlay { font-size: 1.2rem; color: var(--primary); margin: 15px 0; display: none; animation: pulse 1s infinite; font-weight: 900;}
 
-        /* ==============================================================
-           視覺預覽版戰績卡片 (完全回歸 v10 完美排版)
-           ============================================================== */
+        /* --- 戰績預覽卡片 (完美置中版) --- */
         #result-card {
             background: #fff; color: #000; padding: 0;
             border-radius: 20px; margin: 10px auto 20px auto;
@@ -195,7 +202,6 @@
         .result-stat-line { position: relative; height: 20px; display: block; }
         .result-stat-val { position: absolute; right: 0; top: 0; color: #555; }
 
-        /* v10 完美替身懸浮座標 */
         .result-avatar {
             position: absolute; top: 155px; width: 100%; text-align: center; display: block; margin: 0;
             font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif !important;
@@ -204,7 +210,6 @@
         #result-head { font-size: 85px; line-height: 85px; display: block; margin-bottom: 5px; } 
         #result-body { font-size: 85px; line-height: 85px; display: block; }
         
-        /* v10 底部文字座標 */
         .result-text-box {
             position: absolute; bottom: 55px; left: 0; width: 100%; text-align: center;
         }
@@ -213,7 +218,7 @@
         
         .watermark-footer {
             position: absolute; bottom: 15px; left: 0; width: 100%; text-align: center;
-            color: #888888; line-height: 1.3; font-weight: 500; /* 改為低調灰色 500 粗細 */
+            color: #888888; line-height: 1.3; font-weight: 500; 
         }
 
         #final-image-container { width: 100%; max-width: 300px; display: none; margin: 0 auto 15px auto; }
@@ -332,7 +337,7 @@
 
     <div id="result-screen" class="screen-container" style="display: none; justify-content: flex-start;">
         <h1 style="color: #fff; margin-bottom: 5px; font-size: 2rem;">本日戰績</h1>
-        <p style="color:#aaa; font-size:0.9rem; margin-top:0; margin-bottom: 10px;">長按下方圖片即可儲存分享</p>
+        <p style="color:#aaa; font-size:0.9rem; margin-top:0; margin-bottom: 10px; font-weight:700;">長按下方圖片即可儲存分享</p>
         
         <div id="loading-overlay">⏳ 正在生成完美戰績圖...</div>
 
@@ -584,7 +589,7 @@
         }
 
         // =========================================================================
-        // 原生 Canvas API 繪圖核心 (掛載真實源泉圓體，拔除描邊特效！)
+        // 原生 Canvas API 繪圖核心 (100% 絕對置中 + 源泉圓體直接渲染)
         // =========================================================================
         function generateNativeCanvasImage() {
             const loadingText = document.getElementById('loading-overlay');
@@ -644,7 +649,7 @@
                             ctx.restore();
                         });
 
-                        // 4. 繪製虛擬替身 (退回 v10 完美置中座標 Y=200, Y=290)
+                        // 4. 繪製虛擬替身 (v10.0 完美懸浮置中座標)
                         ctx.save();
                         ctx.shadowColor = 'rgba(0,0,0,0.2)';
                         ctx.shadowBlur = 10;
@@ -656,9 +661,8 @@
                         ctx.fillText(bodies[bodyIdx], width/2, 290);
                         ctx.restore();
 
-                        // ⚠️ 終極字體畫筆：直接調用真實存在的 500, 700, 900 字重！不再需要描邊作弊
+                        // ⚠️ 終極完美字體：直接呼叫本機載入的源泉圓體，絕對不會破圖！
                         function drawPerfectText(text, x, y, size, color, weight = '700', align = 'center', noShadow = false) {
-                            // 使用匯入的 GenSenRounded
                             ctx.font = `${weight} ${size}px "GenSenRounded", sans-serif`;
                             ctx.textAlign = align;
                             ctx.textBaseline = 'middle';
@@ -668,8 +672,8 @@
                                 ctx.shadowBlur = 8;
                                 ctx.fillStyle = color;
                                 ctx.fillText(text, x, y);
-                                ctx.fillText(text, x, y); // 雙重填充增強光暈
-                                ctx.shadowColor = 'transparent'; // 畫完重置
+                                ctx.fillText(text, x, y); 
+                                ctx.shadowColor = 'transparent'; 
                             } else {
                                 ctx.fillStyle = color;
                                 ctx.fillText(text, x, y);
@@ -690,7 +694,6 @@
                         // 7. 底部結算文字 (Y=370, 400, 430，使用 900 特粗)
                         drawPerfectText('今天不忍了！', width/2, 370, 18, '#000', '900');
 
-                        // 雙色文字繪製邏輯
                         const crimePrefix = '成功擊退 ';
                         const crimeName = document.getElementById('result-crime').innerText;
                         
@@ -705,7 +708,7 @@
 
                         drawPerfectText('爽度 100%！', width/2, 430, 18, '#000', '900');
 
-                        // 8. 版權宣告 (Y=460, 475，使用 500 中等粗細、灰色、無光暈)
+                        // 8. 版權宣告 (Y=460, 475，使用 500 中等粗細)
                         drawPerfectText('© 2026 an App a Day Project.', width/2, 460, 10, '#888888', '500', 'center', true);
                         drawPerfectText('⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。', width/2, 475, 8, '#888888', '500', 'center', true);
 
