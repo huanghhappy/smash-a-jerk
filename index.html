@@ -7,8 +7,7 @@
     
     <link href="https://cdn.jsdelivr.net/npm/jf-openhuninn@1.1.1/jf-openhuninn-1.1.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;900&family=Noto+Sans+TC:wght@700;900&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
+    
     <meta name="description" content="超舒壓互動神器！自訂你的出氣包，把平時受的氣全部發洩出來！">
     <meta property="og:title" content="小人退散：今天不忍了！">
     <meta property="og:description" content="我正在教訓小人，點擊連結一起加入洩憤行列！以牙還牙，加倍奉還！">
@@ -110,13 +109,11 @@
             background-size: cover; background-position: center; opacity: 0.35; z-index: 0; pointer-events: none;
         }
         
-        /* 戰損圖層 */
         .damage-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 1; opacity: 0.85; overflow: hidden;
         }
         
-        /* 替身區塊 */
         .avatar-display {
             position: relative; display: flex; flex-direction: column; align-items: center;
             font-size: 6.5rem; line-height: 1; user-select: none; transition: transform 0.1s; z-index: 2;
@@ -151,17 +148,13 @@
         #loading-overlay { font-size: 1.2rem; font-weight: bold; color: var(--primary); margin: 15px 0; display: none; animation: pulse 1s infinite;}
 
         /* ==============================================================
-           終極軍規鎖定版戰績卡片 (v6.0)
-           完全使用絕對定位，防止 iOS 截圖引擎跑版
+           視覺預覽版戰績卡片 (僅供畫面預覽，真正下載的圖由原生 Canvas 繪製)
            ============================================================== */
         #result-card {
-            background: #fff; color: #000; 
-            /* 移除 Padding，改用內部絕對定位 */
-            padding: 0;
+            background: #fff; color: #000; padding: 0;
             border-radius: 20px; margin: 10px auto 20px auto;
             border: 6px solid var(--danger); position: relative; 
-            width: 300px; /* 鎖死寬度 */
-            height: 500px; /* 鎖死高度，達成精準 3:5 比例 */
+            width: 300px; height: 500px; /* 直式 3:5 比例 */
             box-sizing: border-box; overflow: hidden; display: block; text-align: center;
         }
         
@@ -174,31 +167,29 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.25); z-index: 1; pointer-events: none;
         }
 
-        /* 內容層容器 */
         .result-content-wrapper { position: relative; z-index: 3; display: block; width: 100%; height: 100%; }
 
-        /* (1) K.O. 擊倒：向上平移 */
+        /* (1) K.O. 擊倒：字體變大，向上平移 */
         .result-title { 
-            position: absolute; top: 25px; width: 100%; text-align: center;
-            font-size: 32px; font-weight: 900; color: var(--danger); display: block; 
+            position: absolute; top: 20px; width: 100%; text-align: center;
+            font-size: 36px; font-weight: 900; color: var(--danger); display: block; 
             text-shadow: 1px 1px 0 #fff; letter-spacing: normal !important; white-space: nowrap; margin: 0;
         }
         
-        /* (2) 數據列：向上平移，與 K.O. 間距變小 */
+        /* (2) 數據列：字體變小，與標題間距變小，各列緊密 */
         .result-stats-container {
-            position: absolute; top: 70px; left: 50%; transform: translateX(-50%);
-            width: 140px; color: #555; font-weight: 700; font-size: 16px; text-align: left; display: block; margin: 0;
+            position: absolute; top: 75px; left: 50%; transform: translateX(-50%);
+            width: 120px; color: #555; font-weight: 700; font-size: 15px; text-align: left; display: block; margin: 0;
         }
         .result-stat-line { 
-            position: relative; height: 22px; display: block; 
+            position: relative; height: 20px; display: block; 
             letter-spacing: normal !important; white-space: nowrap; 
         }
         .result-stat-val { position: absolute; right: 0; top: 0; color: #555; }
 
-        /* 替身區塊：使用絕對定位固定於中央，維持縮小比例 */
+        /* 替身區塊：維持縮小比例，平衡視覺 */
         .result-avatar {
-            position: absolute; top: 150px; width: 100%; text-align: center;
-            display: block; margin: 0;
+            position: absolute; top: 150px; width: 100%; text-align: center; display: block; margin: 0;
             font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif !important;
             text-shadow: 0 0 10px rgba(0,0,0,0.25);
         }
@@ -316,7 +307,7 @@
         </div>
 
         <div id="target-area" onclick="attack('slap')">
-            <div id="arena-bg" class="scene-bg"></div>
+            <img id="arena-bg" class="scene-bg" src="" alt="">
             <div id="damage-layer" class="damage-layer"></div>
             
             <div class="avatar-display" id="arena-avatar">
@@ -343,36 +334,29 @@
         <div id="loading-overlay">⏳ 正在生成完美戰績圖...</div>
 
         <div id="result-card" style="display: block;">
-            
             <div id="result-bg" class="scene-bg-result" style="z-index: 0;"></div>
             <div class="white-overlay"></div>
             <div id="result-damage-layer" class="damage-layer" style="z-index: 1;"></div>
             
             <div class="result-content-wrapper">
-                
                 <span class="result-title">K.O. 擊倒</span>
-                
                 <div class="result-stats-container">
                     <span class="result-stat-line">行刑次數<span class="result-stat-val"><span id="result-hits-val">0</span> 次</span></span>
                     <span class="result-stat-line">行刑時間<span class="result-stat-val" id="result-timer-val">00:00</span></span>
                 </div>
-
                 <div class="result-avatar">
                     <span id="result-head">👩🏻</span>
                     <span id="result-body">👔</span>
                 </div>
-
                 <div class="result-text-box">
                     <span class="result-text">今天不忍了！</span>
                     <span class="result-text">成功擊退 <span id="result-crime" style="color:#FF2400;">[罪狀]</span></span>
                     <span class="result-text">爽度 100%！</span>
                 </div>
-
                 <div class="watermark-footer">
-                    <span style="font-size: 10px; display: block;">© 2026 an App a Day Project.</span>
+                    <span style="font-size: 11px; display: block;">© 2026 an App a Day Project.</span>
                     <span style="font-size: 9px; display: block; margin-top: 2px;">⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。</span>
                 </div>
-
             </div>
         </div>
 
@@ -413,6 +397,9 @@
         let startTime, timerInterval;
         let hitCount = 0; 
         
+        // 建立一個陣列，專門紀錄每一次攻擊的座標與角度，供 Canvas 完美還原
+        let damageRecords = [];
+        
         const heads = ["👩🏻", "👨🏻", "🧑🏻", "🧑🏻‍🦲", "👨🏻‍🦳", "🧓🏻", "👱🏻‍♀️", "🧔🏻‍♂️", "👽", "💩", "🤑", "🤮", "🧟", "🐸", "🍔", "🌭", "🥟", "🍘", "🤿", "🗿", "😈", "👹", "🤡", "🤖"];
         const bodies = ["👔", "👗", "🩳", "🥋", "🧥", "🦺", "🥼", "👚", "👕", "👙", "🩱", "🥻", "👘", "🎽", "🧣", "🍯", "🍵", "🥃", "🥡", "🕳️", "🧻", "🚽", "🪣", "🛒"];
         let headIdx = 0, bodyIdx = 0;
@@ -431,7 +418,7 @@
             const name = document.getElementById('target-name').value.trim() || "無名氏";
             const crime = document.getElementById('crime-tag').options[document.getElementById('crime-tag').selectedIndex].text;
             const sceneKey = document.getElementById('scene-select').value;
-            const bgUrl = `url('${bgMap[sceneKey]}')`;
+            const bgUrl = bgMap[sceneKey];
             
             document.getElementById('display-name').innerText = `目標：${name} (${crime.split(' ')[1]})`;
             document.getElementById('result-crime').innerText = crime.split(' ')[1];
@@ -439,13 +426,13 @@
             document.getElementById('arena-head').innerText = heads[headIdx];
             document.getElementById('arena-body').innerText = bodies[bodyIdx];
             
-            document.getElementById('arena-bg').style.backgroundImage = bgUrl;
-            document.getElementById('result-bg').style.backgroundImage = bgUrl;
+            document.getElementById('arena-bg').src = bgUrl;
 
             document.getElementById('setup-screen').style.display = 'none';
             document.getElementById('arena-screen').style.display = 'flex';
 
             hitCount = 0;
+            damageRecords = []; // 重置戰損紀錄
             document.getElementById('game-hits').innerText = `0 次`;
 
             startTime = Date.now();
@@ -493,14 +480,25 @@
         function leaveDamageMark(type) {
             const dmgLayer = document.getElementById('damage-layer');
             const mark = document.createElement('div');
-            mark.innerText = weaponEmojis[type];
+            
+            // 隨機產生參數
+            const emojiStr = weaponEmojis[type];
+            const pctX = 10 + Math.random() * 80;
+            const pctY = 10 + Math.random() * 80;
+            const size = 28 + Math.floor(Math.random() * 12);
+            const rot = Math.floor(Math.random() * 360);
+            
+            // 將參數存入陣列，供最終 Canvas 繪製使用
+            damageRecords.push({ emoji: emojiStr, px: pctX, py: pctY, s: size, r: rot });
+
+            // 顯示在目前 DOM 畫面上
+            mark.innerText = emojiStr;
             mark.style.position = 'absolute';
-            mark.style.left = `${10 + Math.random() * 80}%`; 
-            mark.style.top = `${10 + Math.random() * 80}%`;
-            // 強制使用 px 單位防止 iOS 截圖引擎計算錯誤
-            mark.style.fontSize = `${28 + Math.floor(Math.random() * 12)}px`;
+            mark.style.left = `${pctX}%`; 
+            mark.style.top = `${pctY}%`;
+            mark.style.fontSize = `${size}px`;
             mark.style.fontFamily = "'Apple Color Emoji', 'Segoe UI Emoji', sans-serif";
-            mark.style.transform = `rotate(${Math.floor(Math.random() * 360)}deg)`; 
+            mark.style.transform = `rotate(${rot}deg)`; 
             mark.style.zIndex = "2";
             dmgLayer.appendChild(mark);
         }
@@ -534,15 +532,14 @@
                 document.body.classList.remove('shake-hard');
                 document.getElementById('arena-screen').style.display = 'none';
                 
-                // 寫入初始頭像，無打碼
+                // 為了視覺預覽，寫入初始頭像
                 document.getElementById('result-head').innerText = heads[headIdx];
                 document.getElementById('result-body').innerText = bodies[bodyIdx];
-                
                 document.getElementById('result-damage-layer').innerHTML = document.getElementById('damage-layer').innerHTML;
-                
                 document.getElementById('result-screen').style.display = 'flex';
                 
-                generateFinalImage(); 
+                // 觸發原生 Canvas 畫布生成！
+                generateNativeCanvasImage(); 
             }, 1500);
         }
 
@@ -590,37 +587,182 @@
             setTimeout(() => { area.removeChild(el); }, 800);
         }
 
-        function generateFinalImage() {
-            const targetCard = document.getElementById('result-card');
+        // =========================================================================
+        // ⚠️ 終極修復核心：取代 html2canvas，使用 Native Canvas API 手工繪製 ⚠️
+        // =========================================================================
+        function generateNativeCanvasImage() {
             const loadingText = document.getElementById('loading-overlay');
+            const targetCard = document.getElementById('result-card');
             
-            // 確保畫面置頂，避免截圖偏移
             window.scrollTo(0, 0);
             loadingText.style.display = 'block';
 
             document.fonts.ready.then(() => {
                 setTimeout(() => {
-                    html2canvas(targetCard, {
-                        scale: 2, 
-                        useCORS: true,
-                        backgroundColor: null
-                    }).then(canvas => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // 設定 3:5 比例的基礎尺寸，並乘上 2 倍確保 Retina 螢幕高畫質
+                    const width = 300;
+                    const height = 500;
+                    canvas.width = width * 2;
+                    canvas.height = height * 2;
+                    ctx.scale(2, 2);
+
+                    // 繪製圓角遮罩矩形
+                    ctx.beginPath();
+                    ctx.moveTo(20, 0);
+                    ctx.arcTo(width, 0, width, height, 20);
+                    ctx.arcTo(width, height, 0, height, 20);
+                    ctx.arcTo(0, height, 0, 0, 20);
+                    ctx.arcTo(0, 0, width, 0, 20);
+                    ctx.closePath();
+                    ctx.save();
+                    ctx.clip(); // 啟動遮罩
+
+                    // 1. 繪製背景圖 (置中裁切)
+                    const bgImg = new Image();
+                    bgImg.src = document.getElementById('arena-bg').src;
+                    
+                    bgImg.onload = () => {
+                        const scale = Math.max(width / bgImg.width, height / bgImg.height);
+                        const dw = bgImg.width * scale;
+                        const dh = bgImg.height * scale;
+                        const dx = (width - dw) / 2;
+                        const dy = (height - dh) / 2;
+                        ctx.drawImage(bgImg, dx, dy, dw, dh);
+
+                        // 2. 繪製 25% 白色透明遮罩
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+                        ctx.fillRect(0, 0, width, height);
+
+                        // 3. 繪製戰損 Emoji
+                        damageRecords.forEach(mark => {
+                            ctx.save();
+                            const cx = (mark.px / 100) * width;
+                            const cy = (mark.py / 100) * height;
+                            ctx.translate(cx, cy);
+                            ctx.rotate(mark.r * Math.PI / 180);
+                            ctx.font = `${mark.s}px "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillText(mark.emoji, 0, 0);
+                            ctx.restore();
+                        });
+
+                        // 4. 繪製虛擬替身 (含陰影)
+                        ctx.save();
+                        ctx.shadowColor = 'rgba(0,0,0,0.25)';
+                        ctx.shadowBlur = 10;
+                        ctx.font = '80px "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(heads[headIdx], width/2, 200);
+                        ctx.fillText(bodies[bodyIdx], width/2, 275);
+                        ctx.restore();
+
+                        // 定義公用字體
+                        const fontFamily = '"jf-openhuninn-1.1", "Noto Sans TC", sans-serif';
+
+                        // 5. 繪製「K.O. 擊倒」標題
+                        ctx.font = `900 36px ${fontFamily}`;
+                        ctx.fillStyle = '#FF2400';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'top';
+                        ctx.shadowColor = '#fff';
+                        ctx.shadowBlur = 0;
+                        ctx.shadowOffsetX = 1;
+                        ctx.shadowOffsetY = 1;
+                        ctx.fillText('K.O. 擊倒', width/2, 35);
+                        ctx.shadowColor = 'transparent'; // 關閉陰影
+
+                        // 6. 繪製數據列
+                        ctx.font = `700 15px ${fontFamily}`;
+                        ctx.fillStyle = '#555';
+                        const statL = 95;
+                        const statR = 205;
+                        
+                        ctx.textAlign = 'left';
+                        ctx.fillText('行刑次數', statL, 95);
+                        ctx.textAlign = 'right';
+                        ctx.fillText(`${hitCount} 次`, statR, 95);
+
+                        ctx.textAlign = 'left';
+                        ctx.fillText('行刑時間', statL, 120);
+                        ctx.textAlign = 'right';
+                        ctx.fillText(document.getElementById('game-timer').innerText, statR, 120);
+
+                        // 7. 繪製底部結算文字
+                        ctx.textAlign = 'center';
+                        ctx.fillStyle = '#000';
+                        ctx.font = `900 18px ${fontFamily}`;
+                        ctx.fillText('今天不忍了！', width/2, 385);
+
+                        // 雙色文字繪製邏輯：「成功擊退 [罪狀]」
+                        const crimePrefix = '成功擊退 ';
+                        const crimeName = document.getElementById('result-crime').innerText;
+                        
+                        ctx.font = `900 18px ${fontFamily}`;
+                        const w1 = ctx.measureText(crimePrefix).width;
+                        ctx.font = `900 22px ${fontFamily}`;
+                        const w2 = ctx.measureText(crimeName).width;
+                        const startX = width/2 - (w1 + w2)/2;
+                        
+                        ctx.textAlign = 'left';
+                        ctx.font = `900 18px ${fontFamily}`;
+                        ctx.fillStyle = '#000';
+                        ctx.fillText(crimePrefix, startX, 415);
+                        
+                        ctx.font = `900 22px ${fontFamily}`;
+                        ctx.fillStyle = '#FF2400';
+                        ctx.fillText(crimeName, startX + w1, 413);
+
+                        ctx.textAlign = 'center';
+                        ctx.fillStyle = '#000';
+                        ctx.font = `900 18px ${fontFamily}`;
+                        ctx.fillText('爽度 100%！', width/2, 445);
+
+                        // 8. 繪製底部版權宣告
+                        ctx.fillStyle = 'rgba(0,0,0,0.45)';
+                        ctx.font = `700 11px ${fontFamily}`;
+                        ctx.fillText('© 2026 an App a Day Project.', width/2, 470);
+                        ctx.font = `700 9px ${fontFamily}`;
+                        ctx.fillText('⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。', width/2, 485);
+
+                        // 解除遮罩，繪製外框紅線
+                        ctx.restore();
+                        ctx.lineWidth = 12; // 因為 scale(2)，實際顯示為 6px
+                        ctx.strokeStyle = '#FF2400';
+                        ctx.beginPath();
+                        ctx.moveTo(20, 0);
+                        ctx.arcTo(width, 0, width, height, 20);
+                        ctx.arcTo(width, height, 0, height, 20);
+                        ctx.arcTo(0, height, 0, 0, 20);
+                        ctx.arcTo(0, 0, width, 0, 20);
+                        ctx.closePath();
+                        ctx.stroke();
+
+                        // 產生最終圖片並替換 DOM
                         const imgData = canvas.toDataURL('image/png');
                         const imgElement = document.createElement('img');
                         imgElement.src = imgData;
                         imgElement.alt = "我的打小人戰績";
 
                         loadingText.style.display = 'none';
-                        targetCard.style.display = 'none'; 
+                        targetCard.style.display = 'none'; // 隱藏原本的預覽版 DOM
                         
                         const container = document.getElementById('final-image-container');
+                        container.innerHTML = ''; // 清空
                         container.appendChild(imgElement);
                         container.style.display = 'block'; 
-                    }).catch(err => {
-                        console.error("生成戰績圖時發生錯誤:", err);
-                        loadingText.innerText = "⚠️ 圖片生成失敗，請重試";
-                    });
-                }, 800); 
+                    };
+                    
+                    // 如果圖片已在快取中，直接觸發 onload
+                    if (bgImg.complete) {
+                        bgImg.onload();
+                    }
+
+                }, 100); 
             });
         }
     </script>
