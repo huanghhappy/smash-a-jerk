@@ -91,7 +91,7 @@
         .preview-emoji { font-size: 3.5rem; line-height: 1; width: 80px; text-align: center;}
         .part-label { font-size: 0.9rem; color: #aaa; font-weight: 700; width: 40px;}
 
-        /* --- 行刑場頂部面板 --- */
+        /* --- 行刑場面板 --- */
         .top-info { width: 100%; display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 700; color: #aaa; margin-top: 5px; align-items: flex-start;}
         .top-stats-box { width: 125px; display: flex; flex-direction: column; gap: 4px; }
         .stat-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
@@ -103,7 +103,6 @@
         #hp-bar { background: #00FF00; height: 100%; width: 100%; transition: width 0.2s, background 0.5s; }
         #rage-bar { background: var(--primary); height: 100%; width: 0%; transition: width 0.2s;}
 
-        /* --- 行刑場 --- */
         #target-area {
             flex-grow: 1; width: 100%; max-width: 320px; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; position: relative; cursor: crosshair; 
@@ -115,7 +114,7 @@
         }
         .damage-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 2; opacity: 0.7; overflow: hidden;
+            pointer-events: none; z-index: 2; opacity: 0.8; overflow: hidden;
         }
         .avatar-display {
             position: relative; display: flex; flex-direction: column; align-items: center;
@@ -151,69 +150,73 @@
         #loading-overlay { font-size: 1.2rem; font-weight: bold; color: var(--primary); margin: 20px 0; display: none; animation: pulse 1s infinite;}
 
         /* ==============================================================
-           戰績圖卡片 (v4.1 終極融合版：v3.3美學 + v4.0骨架)
+           戰績圖卡片 (v4.2 終極無瑕・防破圖・完美比例版)
            ============================================================== */
         #result-card {
             background-color: #ffffff; /* v3.3 白色基底 */
             border: 6px solid var(--danger);
             border-radius: 20px;
-            width: 320px; /* 回歸 v3.3 較窄的寬度 */
-            height: 520px; /* 調整高度以適應內容 */
+            width: 320px; /* 寬度 320px */
+            height: 400px; /* 長寬比 5:4 (Height:Width = 400:320) */
             margin: 10px auto 20px auto; 
-            position: relative; /* v4.0 絕對定位骨架 */
+            position: relative; /* 定位基準 */
             overflow: hidden; 
             box-sizing: border-box; 
             display: block; 
         }
         
-        /* Z0: 背景圖 (透明度降低) */
+        /* 絕對定位的底層背景群 (不影響內部文字的排版) */
         .rc-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-size: cover; background-position: center; opacity: 0.3; z-index: 0;
+            background-size: cover; background-position: center; opacity: 0.35; z-index: 1;
         }
-        /* Z1: 新增 v3.3 風格的白色半透明遮罩 */
         .rc-white-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(255, 255, 255, 0.7); z-index: 1;
+            background-color: rgba(255, 255, 255, 0.65); z-index: 2;
         }
-        /* Z2: 攻擊 Emoji 圖層 (保留 v4.0 的成功顯示) */
         .rc-damage {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0.8; overflow: hidden;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            z-index: 3; opacity: 0.8; overflow: hidden; pointer-events: none;
         }
         
-        /* Z3: 替身區塊 (無打碼，顯示初始狀態) */
-        .rc-avatar-container {
-            position: absolute; top: 130px; left: 0; width: 100%; text-align: center; z-index: 3;
-            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif !important;
-        }
-        .rc-head { font-size: 130px; line-height: 1; display: block; margin-bottom: -20px; filter: drop-shadow(0 0 5px rgba(0,0,0,0.2));}
-        .rc-body { font-size: 130px; line-height: 1; display: block; filter: drop-shadow(0 0 5px rgba(0,0,0,0.2));}
-
-        /* Z4: 文字區塊 (回歸 v3.3 的陰影與排版風格，但使用絕對定位) */
-        .rc-text-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 4; text-align: center;
+        /* 相對定位的內容容器，回歸最安分的安全排版 (Safe Normal DOM Flow) */
+        .rc-content-wrapper {
+            position: relative; z-index: 10; width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center; 
+            padding: 20px 15px 15px 15px; box-sizing: border-box;
         }
 
         .rc-title {
-            font-size: 36px; font-weight: 900; color: var(--danger); line-height: 1; margin-top: 25px; display: block;
-            text-shadow: 2px 2px 0 #000; /* v3.3 文字陰影 */
+            font-size: 2.2rem; font-weight: 900; color: var(--danger); line-height: 1; margin-bottom: 8px;
+            text-shadow: 2px 2px 0 #000; /* v3.3 風格陰影 */
         }
         
-        .rc-stats-block {
-            margin-top: 15px; color: #555; font-weight: 700; font-size: 16px; line-height: 1.4;
+        /* 完美對齊的數據區塊 */
+        .rc-stats-box {
+            width: 140px; margin-bottom: 12px; color: #555; font-weight: 700; font-size: 1rem;
+            display: flex; flex-direction: column; gap: 2px;
         }
-        .rc-stat-line { display: block; }
+        .rc-stat-row { display: flex; justify-content: space-between; width: 100%; }
 
-        .rc-main-text { 
-            font-size: 22px; font-weight: 900; color: #000; display: block; line-height: 1.4; margin-top: 250px;
+        /* 替身區塊 (縮小比例、平衡視覺，防 iOS emoji 縮水) */
+        .rc-avatar-container {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif !important;
+            margin-bottom: 10px;
         }
-        .rc-text-crime { color: var(--danger); font-size: 26px;}
+        .rc-head { font-size: 90px; line-height: 1; display: block; margin-bottom: -15px; filter: drop-shadow(0 0 5px rgba(0,0,0,0.15)); }
+        .rc-body { font-size: 90px; line-height: 1; display: block; filter: drop-shadow(0 0 5px rgba(0,0,0,0.15)); }
+
+        .rc-main-text {
+            font-size: 1.2rem; font-weight: 900; color: #000; line-height: 1.4; text-align: center; margin-bottom: auto;
+        }
+        .rc-text-crime { color: var(--danger); font-size: 1.4rem; }
         
         .rc-footer-block {
-            position: absolute; bottom: 15px; width: 100%; text-align: center; color: rgba(0,0,0,0.5);
+            text-align: center; color: rgba(0,0,0,0.5); line-height: 1.2; width: 100%;
         }
-        .rc-footer-1 { font-size: 11px; font-weight: 700; display: block; }
-        .rc-footer-2 { font-size: 10px; font-weight: 700; display: block; margin-top: 2px; transform: scale(0.95); }
+        .rc-footer-1 { font-size: 0.75rem; font-weight: 700; display: block; }
+        .rc-footer-2 { font-size: 0.65rem; font-weight: 700; display: block; transform: scale(0.95); margin-top: 2px;}
 
         #final-image-container { width: 100%; max-width: 320px; display: none; margin: 0 auto 15px auto; }
         #final-image-container img { width: 100%; border-radius: 20px; box-shadow: 0 0 20px rgba(255,0,0,0.5); display: block;}
@@ -342,17 +345,24 @@
             <div class="rc-white-overlay"></div>
             <div id="result-damage-layer" class="rc-damage"></div>
             
-            <div class="rc-avatar-container">
-                <div id="result-head" class="rc-head">👩🏻</div>
-                <div id="result-body" class="rc-body">👔</div>
-            </div>
-
-            <div class="rc-text-container">
-                <span class="rc-title">K.O. 擊倒</span>
+            <div class="rc-content-wrapper">
                 
-                <div class="rc-stats-block">
-                    <span class="rc-stat-line">行刑次數 <span id="result-hits">0 次</span></span>
-                    <span class="rc-stat-line">行刑時間 <span id="result-timer">00:00</span></span>
+                <div class="rc-title">K.O. 擊倒</div>
+                
+                <div class="rc-stats-box">
+                    <div class="rc-stat-row">
+                        <span class="rc-stat-label">行刑次數</span>
+                        <span id="result-hits" class="rc-stat-val">0 次</span>
+                    </div>
+                    <div class="rc-stat-row">
+                        <span class="rc-stat-label">行刑時間</span>
+                        <span id="result-timer" class="rc-stat-val">00:00</span>
+                    </div>
+                </div>
+
+                <div class="rc-avatar-container">
+                    <span id="result-head" class="rc-head">👩🏻</span>
+                    <span id="result-body" class="rc-body">👔</span>
                 </div>
 
                 <div class="rc-main-text">
@@ -363,8 +373,8 @@
                     <span class="rc-footer-1">© 2026 an App a Day Project.</span>
                     <span class="rc-footer-2">⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。</span>
                 </div>
-            </div>
 
+            </div>
         </div>
 
         <div id="final-image-container"></div>
@@ -500,7 +510,6 @@
             isExploding = true; 
             clearInterval(timerInterval); 
             
-            // 將最終數據填入戰績卡
             document.getElementById('result-timer').innerText = document.getElementById('game-timer').innerText;
             document.getElementById('result-hits').innerText = document.getElementById('game-hits').innerText;
             
@@ -515,6 +524,8 @@
             const avatar = document.getElementById('arena-avatar');
             avatar.style.transform = "scale(2.5)";
             
+            const finalHeadEmoji = document.getElementById('arena-head').innerText;
+            
             document.getElementById('arena-head').innerText = "💥";
             document.getElementById('arena-body').style.visibility = "hidden";
             document.getElementById('arena-head').style.transform = "translateY(25px)";
@@ -523,7 +534,6 @@
                 document.body.classList.remove('shake-hard');
                 document.getElementById('arena-screen').style.display = 'none';
                 
-                // 確保抓取初始臉，無打碼
                 document.getElementById('result-head').innerText = heads[headIdx];
                 document.getElementById('result-body').innerText = bodies[bodyIdx];
                 document.getElementById('result-damage-layer').innerHTML = document.getElementById('damage-layer').innerHTML;
