@@ -28,7 +28,7 @@
         
         body {
             margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-light);
-            /* ⚠️ 終極字體防護：Apple 原生冬青圓體優先 -> 粉圓體備用 -> 系統預設。絕對不使用 bold 防止 iOS 暴走 */
+            /* Apple 原生冬青圓體優先 -> 粉圓體備用。絕對不使用 bold 防止 iOS 暴走 */
             font-family: 'Hiragino Maru Gothic ProN', 'jf-openhuninn-1.1', sans-serif !important;
             font-weight: normal; 
             overflow: hidden; display: flex; flex-direction: column;
@@ -36,7 +36,7 @@
             touch-action: manipulation;
         }
 
-        /* 強制所有輸入框和按鈕繼承圓體，解決「業力引爆」變方角字的問題 */
+        /* 強制所有輸入框和按鈕繼承圓體 */
         input, select, button {
             font-family: inherit !important;
             font-weight: normal !important;
@@ -64,17 +64,18 @@
             font-size: clamp(1.5rem, 6.5vw, 2.2rem); 
             white-space: nowrap; text-shadow: 2px 2px 0px var(--danger); 
             margin: 0; line-height: 1.2;
-            -webkit-text-stroke: 1px var(--primary); /* 介面文字手工加粗 */
+            -webkit-text-stroke: 1px var(--primary); 
         }
         .subtitle { color: var(--danger); font-size: 1.3rem; margin-top: 5px; -webkit-text-stroke: 0.5px var(--danger); }
         h2 { font-size: 1.2rem; margin: 10px 0; color: #fff; -webkit-text-stroke: 0.5px #fff;}
         
         .input-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 15px; }
+        
+        /* 修復：移除 -webkit-text-stroke 讓輸入框文字變回實心 */
         .ui-element {
             width: 100%; max-width: 320px; box-sizing: border-box;
             padding: 12px; font-size: 1.1rem;
             border-radius: 12px; text-align: center; outline: none;
-            -webkit-text-stroke: 0.5px #fff;
         }
         input, select { background: #333; border: 2px solid var(--primary); color: white; appearance: none; }
         
@@ -147,17 +148,19 @@
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
+        /* 修復：明確宣告 damage-text 的字體，確保攻擊特效字體一致 */
         .damage-text {
             position: absolute; color: white; font-size: 2rem;
+            font-family: 'Hiragino Maru Gothic ProN', 'jf-openhuninn-1.1', sans-serif !important;
             text-shadow: 2px 2px 0 #000; pointer-events: none; z-index: 10;
-            animation: floatUp 0.8s ease-out forwards; -webkit-text-stroke: 1px white;
+            animation: floatUp 0.8s ease-out forwards; -webkit-text-stroke: 0.5px white;
         }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-50px) scale(1.5); } }
 
         #loading-overlay { font-size: 1.2rem; color: var(--primary); margin: 15px 0; display: none; animation: pulse 1s infinite; -webkit-text-stroke: 0.5px var(--primary);}
 
         /* ==============================================================
-           視覺預覽版戰績卡片 (配合 Canvas v10 完美座標排版)
+           視覺預覽版戰績卡片 
            ============================================================== */
         #result-card {
             background: #fff; color: #000; padding: 0;
@@ -178,20 +181,20 @@
         .result-content-wrapper { position: relative; z-index: 3; display: block; width: 100%; height: 100%; }
 
         .result-title { 
-            position: absolute; top: 22px; width: 100%; text-align: center;
-            font-size: 36px; color: var(--danger); display: block; 
-            text-shadow: 1px 1px 0 #fff; margin: 0; -webkit-text-stroke: 1.5px var(--danger);
+            position: absolute; top: 20px; width: 100%; text-align: center;
+            font-size: 34px; color: var(--danger); display: block; 
+            text-shadow: 1px 1px 0 #fff; margin: 0; -webkit-text-stroke: 1px var(--danger);
         }
         
         .result-stats-container {
-            position: absolute; top: 80px; left: 50%; transform: translateX(-50%);
+            position: absolute; top: 75px; left: 50%; transform: translateX(-50%);
             width: 120px; color: #555; font-size: 15px; text-align: left; display: block; margin: 0; -webkit-text-stroke: 0.5px #555;
         }
-        .result-stat-line { position: relative; height: 25px; display: block; }
+        .result-stat-line { position: relative; height: 20px; display: block; }
         .result-stat-val { position: absolute; right: 0; top: 0; color: #555; }
 
         .result-avatar {
-            position: absolute; top: 155px; width: 100%; text-align: center; display: block; margin: 0;
+            position: absolute; top: 165px; width: 100%; text-align: center; display: block; margin: 0;
             font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif !important;
             text-shadow: 0 0 10px rgba(0,0,0,0.25);
         }
@@ -201,12 +204,13 @@
         .result-text-box {
             position: absolute; bottom: 55px; left: 0; width: 100%; text-align: center;
         }
-        .result-text { font-size: 18px; line-height: 1.6; display: block; margin: 0; -webkit-text-stroke: 0.8px #000; }
-        #result-crime { font-size: 22px; color: var(--danger); -webkit-text-stroke: 1px var(--danger); }
+        .result-text { font-size: 18px; line-height: 1.5; display: block; margin: 0; -webkit-text-stroke: 0.5px #000; }
+        #result-crime { font-size: 22px; color: var(--danger); -webkit-text-stroke: 0.8px var(--danger); }
         
+        /* 修復：預覽版版權變灰且移除 stroke */
         .watermark-footer {
             position: absolute; bottom: 15px; left: 0; width: 100%; text-align: center;
-            color: rgba(0, 0, 0, 0.45); line-height: 1.3; -webkit-text-stroke: 0.3px rgba(0,0,0,0.45);
+            color: #888; line-height: 1.3; -webkit-text-stroke: 0px;
         }
 
         #final-image-container { width: 100%; max-width: 300px; display: none; margin: 0 auto 15px auto; }
@@ -577,7 +581,7 @@
         }
 
         // =========================================================================
-        // 原生 Canvas API 繪圖核心 (終極大一統：Apple原生圓體 + v10完美排版)
+        // 原生 Canvas API 繪圖核心 (最終精修：降描邊厚度、版權變灰)
         // =========================================================================
         function generateNativeCanvasImage() {
             const loadingText = document.getElementById('loading-overlay');
@@ -637,7 +641,6 @@
                             ctx.restore();
                         });
 
-                        // 4. 繪製虛擬替身 (退回 v10.0 完美懸浮置中座標 Y=200, Y=290)
                         ctx.save();
                         ctx.shadowColor = 'rgba(0,0,0,0.2)';
                         ctx.shadowBlur = 10;
@@ -645,43 +648,42 @@
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
                         
-                        ctx.fillText(heads[headIdx], width/2, 200);
-                        ctx.fillText(bodies[bodyIdx], width/2, 290);
+                        ctx.fillText(heads[headIdx], width/2, 210);
+                        ctx.fillText(bodies[bodyIdx], width/2, 300);
                         ctx.restore();
 
-                        // ⚠️ 終極修復字體：Apple原生圓體優先，確保不缺字。且絕對使用 normal 狀態！
+                        // ⚠️ 終極修復字體：Apple原生圓體優先，確保不缺字。絕對使用 normal 狀態！
                         const fontBase = '"Hiragino Maru Gothic ProN", "jf-openhuninn-1.1", sans-serif';
                         
-                        // 乾淨的繪圖筆刷，加入圓角手工加粗，保證字體又粗又圓且不空心
-                        function drawThickCuteText(text, x, y, size, color, align = 'center') {
+                        // 乾淨的繪圖筆刷，修復：下調加粗厚度 (0.025)，讓複雜文字(擊/鍋)粒粒分明
+                        function drawThickCuteText(text, x, y, size, color, align = 'center', noStroke = false) {
                             ctx.font = `normal ${size}px ${fontBase}`;
                             ctx.textAlign = align;
                             ctx.textBaseline = 'middle';
                             
-                            // 外層白色防護光暈
-                            ctx.shadowColor = 'rgba(255, 255, 255, 1)';
-                            ctx.shadowBlur = 10;
-                            ctx.fillStyle = color;
-                            ctx.fillText(text, x, y);
-                            ctx.fillText(text, x, y); // 雙重填充增強光暈
+                            if (!noStroke) {
+                                ctx.shadowColor = 'rgba(255, 255, 255, 1)';
+                                ctx.shadowBlur = 10;
+                                ctx.fillStyle = color;
+                                ctx.fillText(text, x, y);
+                                ctx.fillText(text, x, y); 
+                                
+                                ctx.shadowColor = 'transparent'; 
+                                
+                                ctx.lineJoin = 'round'; 
+                                ctx.lineWidth = size * 0.025; // ★ 修復：將原本的 0.05 降為 0.025，解決文字糊成一團的問題
+                                ctx.strokeStyle = color;
+                                ctx.strokeText(text, x, y);
+                            }
                             
-                            ctx.shadowColor = 'transparent'; // 關閉光暈
-                            
-                            // 手工圓潤加粗 (這能讓文字變粗且絕對不會有尖角或變成空心字！)
-                            ctx.lineJoin = 'round'; 
-                            ctx.lineWidth = size * 0.05; // 適度加粗
-                            ctx.strokeStyle = color;
-                            ctx.strokeText(text, x, y);
-                            
-                            // 最後再次填滿實心，確保內部無空隙，完美飽滿
                             ctx.fillStyle = color;
                             ctx.fillText(text, x, y);
                         }
 
-                        // 5. K.O. 標題 (v10.0 座標 Y=40)
+                        // 5. K.O. 標題
                         drawThickCuteText('K.O. 擊倒', width/2, 40, 36, '#FF2400');
 
-                        // 6. 數據列 (v10.0 座標 Y=90, 115)
+                        // 6. 數據列
                         const statL = 90;
                         const statR = 210;
                         drawThickCuteText('行刑次數', statL, 90, 15, '#555', 'left');
@@ -689,10 +691,9 @@
                         drawThickCuteText('行刑時間', statL, 115, 15, '#555', 'left');
                         drawThickCuteText(document.getElementById('game-timer').innerText, statR, 115, 15, '#555', 'right');
 
-                        // 7. 底部結算文字 (退回 v10.0 座標 Y=370, 400, 430)
-                        drawThickCuteText('今天不忍了！', width/2, 370, 18, '#000');
+                        // 7. 底部結算文字
+                        drawThickCuteText('今天不忍了！', width/2, 390, 18, '#000');
 
-                        // 雙色文字繪製邏輯
                         const crimePrefix = '成功擊退 ';
                         const crimeName = document.getElementById('result-crime').innerText;
                         
@@ -702,14 +703,14 @@
                         const w2 = ctx.measureText(crimeName).width;
                         const startX = width/2 - (w1 + w2)/2;
                         
-                        drawThickCuteText(crimePrefix, startX, 400, 18, '#000', 'left');
-                        drawThickCuteText(crimeName, startX + w1, 400, 22, '#FF2400', 'left');
+                        drawThickCuteText(crimePrefix, startX, 420, 18, '#000', 'left');
+                        drawThickCuteText(crimeName, startX + w1, 420, 22, '#FF2400', 'left');
 
-                        drawThickCuteText('爽度 100%！', width/2, 430, 18, '#000');
+                        drawThickCuteText('爽度 100%！', width/2, 450, 18, '#000');
 
-                        // 8. 版權宣告 (退回 v10.0 座標 Y=460, 475)
-                        drawThickCuteText('© 2026 an App a Day Project.', width/2, 460, 10, 'rgba(0,0,0,0.6)');
-                        drawThickCuteText('⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。', width/2, 475, 8, 'rgba(0,0,0,0.6)');
+                        // 8. 版權宣告 (修復：改為灰色 #888888 且無描邊 noStroke=true，不喧賓奪主)
+                        drawThickCuteText('© 2026 an App a Day Project.', width/2, 475, 10, '#888888', 'center', true);
+                        drawThickCuteText('⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。', width/2, 490, 8, '#888888', 'center', true);
 
                         // 繪製紅框
                         ctx.lineWidth = 12; 
