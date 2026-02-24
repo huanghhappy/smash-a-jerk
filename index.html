@@ -116,6 +116,7 @@
             pointer-events: none; z-index: 1; opacity: 0.85; overflow: hidden;
         }
         
+        /* 替身區塊 */
         .avatar-display {
             position: relative; display: flex; flex-direction: column; align-items: center;
             font-size: 6.5rem; line-height: 1; user-select: none; transition: transform 0.1s; z-index: 2;
@@ -150,11 +151,13 @@
         #loading-overlay { font-size: 1.2rem; font-weight: bold; color: var(--primary); margin: 15px 0; display: none; animation: pulse 1s infinite;}
 
         /* ==============================================================
-           終極鋼鐵防破圖・3:5 完美比例戰績卡片
+           終極軍規鎖定版戰績卡片 (v6.0)
+           完全使用絕對定位，防止 iOS 截圖引擎跑版
            ============================================================== */
         #result-card {
             background: #fff; color: #000; 
-            padding: 20px;
+            /* 移除 Padding，改用內部絕對定位 */
+            padding: 0;
             border-radius: 20px; margin: 10px auto 20px auto;
             border: 6px solid var(--danger); position: relative; 
             width: 300px; /* 鎖死寬度 */
@@ -166,21 +169,25 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover; background-position: center; opacity: 0.35; z-index: 0; pointer-events: none;
         }
+        /* 修正：白色遮罩不透明度下調至 25% */
         .white-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.75); z-index: 1; pointer-events: none;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.25); z-index: 1; pointer-events: none;
         }
 
+        /* 內容層容器 */
         .result-content-wrapper { position: relative; z-index: 3; display: block; width: 100%; height: 100%; }
 
-        /* 防 iOS 文字飛散：使用 nowrap 與 normal 字距 */
+        /* (1) K.O. 擊倒：向上平移 */
         .result-title { 
-            font-size: 32px; font-weight: 900; color: var(--danger); margin: 10px 0 15px 0; display: block; 
-            text-shadow: 1px 1px 0 #fff; letter-spacing: normal !important; white-space: nowrap; 
+            position: absolute; top: 25px; width: 100%; text-align: center;
+            font-size: 32px; font-weight: 900; color: var(--danger); display: block; 
+            text-shadow: 1px 1px 0 #fff; letter-spacing: normal !important; white-space: nowrap; margin: 0;
         }
         
-        /* 穩定的數據排版：禁用 flex，改用 absolute 防走位 */
+        /* (2) 數據列：向上平移，與 K.O. 間距變小 */
         .result-stats-container {
-            width: 140px; margin: 0 auto 15px auto; color: #555; font-weight: 700; font-size: 16px; text-align: left; display: block;
+            position: absolute; top: 70px; left: 50%; transform: translateX(-50%);
+            width: 140px; color: #555; font-weight: 700; font-size: 16px; text-align: left; display: block; margin: 0;
         }
         .result-stat-line { 
             position: relative; height: 22px; display: block; 
@@ -188,27 +195,29 @@
         }
         .result-stat-val { position: absolute; right: 0; top: 0; color: #555; }
 
-        /* 替身區塊：縮小尺寸並優化間距，解決擁擠與重疊 */
+        /* 替身區塊：使用絕對定位固定於中央，維持縮小比例 */
         .result-avatar {
-            display: block; margin: 15px auto 25px auto;
+            position: absolute; top: 150px; width: 100%; text-align: center;
+            display: block; margin: 0;
             font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif !important;
             text-shadow: 0 0 10px rgba(0,0,0,0.25);
         }
-        #result-head { font-size: 80px; line-height: 80px; display: block; margin-bottom: -5px; } /* 縮小尺寸，微調間距 */
+        #result-head { font-size: 80px; line-height: 80px; display: block; margin-bottom: -5px; } 
         #result-body { font-size: 80px; line-height: 80px; display: block; }
         
-        /* 底部文字：設定絕對定位，確保一定有空間顯示 */
+        /* (3) 底部文字：字體縮小，向下平移 */
         .result-text-box {
-            position: absolute; bottom: 50px; left: 0; width: 100%; text-align: center;
+            position: absolute; bottom: 45px; left: 0; width: 100%; text-align: center;
         }
         .result-text { 
-            font-size: 20px; font-weight: 900; line-height: 1.5; display: block; margin: 0;
+            font-size: 18px; font-weight: 900; line-height: 1.5; display: block; margin: 0;
             letter-spacing: normal !important; white-space: nowrap; 
         }
+        #result-crime { font-size: 22px; }
         
-        /* 版權浮水印固定在最底部 */
+        /* (4) 版權宣告：字體縮小，向下平移 */
         .watermark-footer {
-            position: absolute; bottom: 15px; left: 0; width: 100%; text-align: center;
+            position: absolute; bottom: 10px; left: 0; width: 100%; text-align: center;
             color: rgba(0, 0, 0, 0.45); font-weight: 700; line-height: 1.3;
             letter-spacing: normal !important; white-space: nowrap;
         }
@@ -355,13 +364,13 @@
 
                 <div class="result-text-box">
                     <span class="result-text">今天不忍了！</span>
-                    <span class="result-text">成功擊退 <span id="result-crime" style="color:#FF2400; font-size:24px;">[罪狀]</span></span>
+                    <span class="result-text">成功擊退 <span id="result-crime" style="color:#FF2400;">[罪狀]</span></span>
                     <span class="result-text">爽度 100%！</span>
                 </div>
 
                 <div class="watermark-footer">
-                    <span style="font-size: 12px; display: block;">© 2026 an App a Day Project.</span>
-                    <span style="font-size: 10px; display: block; transform: scale(0.95); margin-top: 2px;">⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。</span>
+                    <span style="font-size: 10px; display: block;">© 2026 an App a Day Project.</span>
+                    <span style="font-size: 9px; display: block; margin-top: 2px;">⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。</span>
                 </div>
 
             </div>
