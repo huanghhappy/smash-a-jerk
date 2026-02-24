@@ -116,7 +116,6 @@
             pointer-events: none; z-index: 1; opacity: 0.85; overflow: hidden;
         }
         
-        /* 替身區塊 */
         .avatar-display {
             position: relative; display: flex; flex-direction: column; align-items: center;
             font-size: 6.5rem; line-height: 1; user-select: none; transition: transform 0.1s; z-index: 2;
@@ -151,15 +150,15 @@
         #loading-overlay { font-size: 1.2rem; font-weight: bold; color: var(--primary); margin: 15px 0; display: none; animation: pulse 1s infinite;}
 
         /* ==============================================================
-           終極穩定版戰績卡片
+           終極鋼鐵防破圖・3:5 完美比例戰績卡片
            ============================================================== */
         #result-card {
             background: #fff; color: #000; 
-            padding: 25px 20px 20px 20px;
-            border-radius: 20px; margin: 10px 0 20px 0;
+            padding: 20px;
+            border-radius: 20px; margin: 10px auto 20px auto;
             border: 6px solid var(--danger); position: relative; 
-            width: 100%; max-width: 300px; /* 調整最大寬度以適應手機 */
-            aspect-ratio: 3 / 5; /* 設定 3:5 直式比例 */
+            width: 300px; /* 鎖死寬度 */
+            height: 500px; /* 鎖死高度，達成精準 3:5 比例 */
             box-sizing: border-box; overflow: hidden; display: block; text-align: center;
         }
         
@@ -171,35 +170,51 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.75); z-index: 1; pointer-events: none;
         }
 
-        .result-content-wrapper { position: relative; z-index: 3; display: block; }
+        .result-content-wrapper { position: relative; z-index: 3; display: block; width: 100%; height: 100%; }
 
-        .result-title { font-size: 2.2rem; font-weight: 900; color: var(--danger); margin: 0 0 15px 0; display: block; text-shadow: 1px 1px 0 #fff;}
+        /* 防 iOS 文字飛散：使用 nowrap 與 normal 字距 */
+        .result-title { 
+            font-size: 32px; font-weight: 900; color: var(--danger); margin: 10px 0 15px 0; display: block; 
+            text-shadow: 1px 1px 0 #fff; letter-spacing: normal !important; white-space: nowrap; 
+        }
         
+        /* 穩定的數據排版：禁用 flex，改用 absolute 防走位 */
         .result-stats-container {
-            width: 150px; margin: 0 auto 15px auto; color: #555; font-weight: 700; font-size: 1.05rem; text-align: left;
+            width: 140px; margin: 0 auto 15px auto; color: #555; font-weight: 700; font-size: 16px; text-align: left; display: block;
         }
-        .result-stat-line { margin-bottom: 5px; display: block; overflow: hidden; }
-        .result-stat-val { float: right; color: #555; }
+        .result-stat-line { 
+            position: relative; height: 22px; display: block; 
+            letter-spacing: normal !important; white-space: nowrap; 
+        }
+        .result-stat-val { position: absolute; right: 0; top: 0; color: #555; }
 
-        /* 替身區塊 (縮小比例且不重疊) */
+        /* 替身區塊：縮小尺寸並優化間距，解決擁擠與重疊 */
         .result-avatar {
-            font-size: 5rem; /* 縮小尺寸 */
-            line-height: 1; display: block; margin: 15px auto; /* 增加上下間距 */
+            display: block; margin: 15px auto 25px auto;
             font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif !important;
-            text-shadow: 0 0 10px rgba(0,0,0,0.3);
+            text-shadow: 0 0 10px rgba(0,0,0,0.25);
         }
-        #result-head { display: block; margin-bottom: -10px; /* 調整頭部與身體間距 */ }
-        #result-body { display: block; }
+        #result-head { font-size: 80px; line-height: 80px; display: block; margin-bottom: -5px; } /* 縮小尺寸，微調間距 */
+        #result-body { font-size: 80px; line-height: 80px; display: block; }
         
-        .result-text { font-size: 1.3rem; font-weight: 900; line-height: 1.5; margin: 20px 0 0 0; display: block; }
+        /* 底部文字：設定絕對定位，確保一定有空間顯示 */
+        .result-text-box {
+            position: absolute; bottom: 50px; left: 0; width: 100%; text-align: center;
+        }
+        .result-text { 
+            font-size: 20px; font-weight: 900; line-height: 1.5; display: block; margin: 0;
+            letter-spacing: normal !important; white-space: nowrap; 
+        }
         
+        /* 版權浮水印固定在最底部 */
         .watermark-footer {
-            margin-top: 20px; display: block; text-align: center;
+            position: absolute; bottom: 15px; left: 0; width: 100%; text-align: center;
             color: rgba(0, 0, 0, 0.45); font-weight: 700; line-height: 1.3;
+            letter-spacing: normal !important; white-space: nowrap;
         }
 
         #final-image-container { width: 100%; max-width: 300px; display: none; margin: 0 auto 15px auto; }
-        #final-image-container img { width: 100%; border-radius: 20px; box-shadow: 0 0 20px rgba(255,0,0,0.5); display: block; aspect-ratio: 3 / 5; } /* 最終圖片也保持 3:5 */
+        #final-image-container img { width: 100%; border-radius: 20px; box-shadow: 0 0 20px rgba(255,0,0,0.5); display: block;}
 
         .footer-info {
             margin-top: auto; padding: 10px 0; text-align: center; width: 100%;
@@ -275,10 +290,10 @@
         <div class="top-info">
             <span id="display-name" style="color: var(--primary);">目標：</span>
             <div class="top-stats-box">
-                <div class="stat-row">
+                <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 2px;">
                     <span>行刑次數</span><span id="game-hits" style="color: #fff;">0 次</span>
                 </div>
-                <div class="stat-row">
+                <div style="display: flex; justify-content: space-between; width: 100%;">
                     <span>行刑時間</span><span id="game-timer" style="color: #fff;">00:00</span>
                 </div>
             </div>
@@ -326,25 +341,27 @@
             
             <div class="result-content-wrapper">
                 
-                <div class="result-title">K.O. 擊倒</div>
+                <span class="result-title">K.O. 擊倒</span>
                 
                 <div class="result-stats-container">
-                    <div class="result-stat-line">行刑次數<span class="result-stat-val"><span id="result-hits-val">0</span> 次</span></div>
-                    <div class="result-stat-line">行刑時間<span class="result-stat-val" id="result-timer-val">00:00</span></div>
+                    <span class="result-stat-line">行刑次數<span class="result-stat-val"><span id="result-hits-val">0</span> 次</span></span>
+                    <span class="result-stat-line">行刑時間<span class="result-stat-val" id="result-timer-val">00:00</span></span>
                 </div>
 
                 <div class="result-avatar">
-                    <div id="result-head">👩🏻</div>
-                    <div id="result-body">👔</div>
+                    <span id="result-head">👩🏻</span>
+                    <span id="result-body">👔</span>
                 </div>
 
-                <div class="result-text">
-                    今天不忍了！<br>成功擊退 <span id="result-crime" style="color:#FF2400; font-size:1.6rem;">[罪狀]</span><br>爽度 100%！
+                <div class="result-text-box">
+                    <span class="result-text">今天不忍了！</span>
+                    <span class="result-text">成功擊退 <span id="result-crime" style="color:#FF2400; font-size:24px;">[罪狀]</span></span>
+                    <span class="result-text">爽度 100%！</span>
                 </div>
 
                 <div class="watermark-footer">
-                    <div style="font-size: 0.75rem;">© 2026 an App a Day Project.</div>
-                    <div style="font-size: 0.6rem; transform: scale(0.95); margin-top: 2px;">⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。</div>
+                    <span style="font-size: 12px; display: block;">© 2026 an App a Day Project.</span>
+                    <span style="font-size: 10px; display: block; transform: scale(0.95); margin-top: 2px;">⚠️ 本程式純屬娛樂舒壓，請勿在現實生活中模仿任何行為。</span>
                 </div>
 
             </div>
@@ -471,9 +488,11 @@
             mark.style.position = 'absolute';
             mark.style.left = `${10 + Math.random() * 80}%`; 
             mark.style.top = `${10 + Math.random() * 80}%`;
-            mark.style.fontSize = `${28 + Math.random() * 12}px`;
+            // 強制使用 px 單位防止 iOS 截圖引擎計算錯誤
+            mark.style.fontSize = `${28 + Math.floor(Math.random() * 12)}px`;
             mark.style.fontFamily = "'Apple Color Emoji', 'Segoe UI Emoji', sans-serif";
-            mark.style.transform = `rotate(${Math.random() * 360}deg)`; 
+            mark.style.transform = `rotate(${Math.floor(Math.random() * 360)}deg)`; 
+            mark.style.zIndex = "2";
             dmgLayer.appendChild(mark);
         }
 
@@ -506,6 +525,7 @@
                 document.body.classList.remove('shake-hard');
                 document.getElementById('arena-screen').style.display = 'none';
                 
+                // 寫入初始頭像，無打碼
                 document.getElementById('result-head').innerText = heads[headIdx];
                 document.getElementById('result-body').innerText = bodies[bodyIdx];
                 
@@ -565,21 +585,16 @@
             const targetCard = document.getElementById('result-card');
             const loadingText = document.getElementById('loading-overlay');
             
+            // 確保畫面置頂，避免截圖偏移
             window.scrollTo(0, 0);
             loadingText.style.display = 'block';
 
             document.fonts.ready.then(() => {
                 setTimeout(() => {
                     html2canvas(targetCard, {
-                        scale: 1.5, 
+                        scale: 2, 
                         useCORS: true,
-                        allowTaint: true,
-                        backgroundColor: null,
-                        onclone: function(clonedDoc) {
-                            let clonedCard = clonedDoc.getElementById('result-card');
-                            clonedCard.style.display = 'block';
-                            clonedCard.style.position = 'relative';
-                        }
+                        backgroundColor: null
                     }).then(canvas => {
                         const imgData = canvas.toDataURL('image/png');
                         const imgElement = document.createElement('img');
